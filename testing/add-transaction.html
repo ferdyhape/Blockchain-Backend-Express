@@ -13,7 +13,7 @@
     <div class="container">
         <h2 class="mt-5 text-center">Testing Save Transaction</h2>
         <div class="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto form my-5">
-            <form action="/api/transactions" method="POST">
+            <form id="form-transaction" method="POST">
                 <div class="mb-3">
                     <input class="form-control" type="text" placeholder="Transaction Code..." name="transactionCode"
                         id="transactionCode" required />
@@ -52,7 +52,7 @@
                 <div class="d-flex justify-content-between gap-3">
                     <a href="/test/menu" class="btn btn-sm btn-secondary w-100">Back</a>
                     <a id="generateRandomData" class="btn btn-sm btn-success w-100">Generate Random Data</a>
-                    <button type="submit" class="btn btn-sm btn-primary w-100">
+                    <button type="submit" class="btn btn-sm btn-primary w-100" id="submit-form-transaction">
                         Submit
                     </button>
                 </div>
@@ -82,6 +82,34 @@
                 $('#totalPrice').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
                 $('#paymentStatus').val('PENDING');
                 $('#createdAt').val(faker.date.recent().getTime());
+            });
+        });
+
+        $('#form-transaction').submit(function (e) {
+            e.preventDefault();
+            let data = {
+                transactionCode: $('#transactionCode').val(),
+                buyer: $('#buyer').val(),
+                buyerId: $('#buyerId').val(),
+                sellerCompany: $('#sellerCompany').val(),
+                sellerId: $('#sellerId').val(),
+                sumOfProduct: $('#sumOfProduct').val(),
+                totalPrice: $('#totalPrice').val(),
+                paymentStatus: $('#paymentStatus').val(),
+                createdAt: $('#createdAt').val()
+            };
+            $.ajax({
+                url: '/api/transactions',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('Save transaction on progress');
+                    $('#form-transaction').trigger('reset');
+                },
+                error: function (xhr, status, error) {
+                    alert('Transaction failed to save');
+                }
             });
         });
     </script>

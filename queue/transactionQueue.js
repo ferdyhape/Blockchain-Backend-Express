@@ -4,8 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Initialize the queue outside of any function
-const transactionQueue = new Queue("transactions", process.env.KV_REDIS_VERCEL);
+// using KV Redis from Vercel
+// const transactionQueue = new Queue("transactions", process.env.KV_REDIS_VERCEL);
+
+// using local Redis
+const transactionQueue = new Queue("transactions");
 
 // Define the process handler to handle incoming jobs
 transactionQueue.process(async (job) => {
