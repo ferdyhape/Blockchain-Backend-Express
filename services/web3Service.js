@@ -32,7 +32,6 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
     let gasPrice = await web3.eth.getGasPrice();
-    console.log("gasPrice", gasPrice);
     if (useFor === "transactionDetail") {
       gasPrice = gasPrice.toString() * 2;
     }
@@ -40,6 +39,7 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     const contract = new web3.eth.Contract(abiUsed, contractAddressUsed);
     const data = contract.methods[method](...arrayParams).encodeABI();
 
+    console.log("sending raw transaction...");
     const rawTx = {
       nonce: web3.utils.toHex(nonce),
       gasPrice: web3.utils.toHex(gasPrice),

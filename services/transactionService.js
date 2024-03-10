@@ -20,7 +20,7 @@ export const getAllTransaction = async () => {
   return mappedTransactions;
 };
 
-export const addTransaction = async (req, res) => {
+export const addTransaction = async (req) => {
   const {
     transactionCode,
     buyer,
@@ -31,7 +31,7 @@ export const addTransaction = async (req, res) => {
     totalPrice,
     paymentStatus,
     createdAt,
-  } = req.body;
+  } = req;
   let arrayParams = [
     transactionCode,
     buyer,
@@ -44,5 +44,5 @@ export const addTransaction = async (req, res) => {
     createdAt,
   ];
   var response = await sendRawTx(arrayParams, "addTransaction", "transaction");
-  return response;
+  console.log("transaction hash: ", response.transactionHash);
 };
