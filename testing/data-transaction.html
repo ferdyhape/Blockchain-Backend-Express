@@ -14,9 +14,9 @@
         <div class="col-11 mx-auto form my-5">
             <div class="d-flex justify-content-between align-items-center my-4">
                 <h2>All Data Transaction</h2>
-                <div class="my-auto align-items-center">
-                    <button class="btn btn-info me-2" id="refreshButton">Refresh</button>
-                    <a href="/test/menu" class="btn btn-primary">Back</a>
+                <div class="my-auto align-items-center d-flex">
+                    <button class="btn btn-info me-2 btn-sm" id="refreshButton">Refresh</button>
+                    <a href="/test/menu" class="btn btn-primary btn-sm">Back</a>
                 </div>
             </div>
 
@@ -31,25 +31,27 @@
                 Loading...
             </h5>
 
-            <table class="table table-striped" id="data-all-transaction">
-                <thead>
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Transaction Code</th>
-                        <th>Buyer</th>
-                        <th>Buyer ID</th>
-                        <th>Seller Company</th>
-                        <th>Seller ID</th>
-                        <th>Sum of Product</th>
-                        <th>Total Price</th>
-                        <th>Payment Status</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
+            <div class="table-responsive">
+                <table class="table table-striped" id="data-all-transaction">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Transaction Code</th>
+                            <th>Buyer</th>
+                            <th>Buyer ID</th>
+                            <th>Seller Company</th>
+                            <th>Seller ID</th>
+                            <th>Sum of Product</th>
+                            <th>Total Price</th>
+                            <th>Payment Status</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 
