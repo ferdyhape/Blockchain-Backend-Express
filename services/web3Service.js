@@ -32,8 +32,9 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
     let gasPrice = await web3.eth.getGasPrice();
+    console.log("gasPrice", gasPrice);
     if (useFor === "transactionDetail") {
-      gasPrice = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(2));
+      gasPrice = gasPrice.toString() * 2;
     }
     const gasLimit = 3000000;
     const contract = new web3.eth.Contract(abiUsed, contractAddressUsed);
