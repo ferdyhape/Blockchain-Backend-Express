@@ -14,7 +14,7 @@ export const getAllTransactionDetail = async () => {
         productDescription: transactionDetail[2],
         tokenOfProduct: transactionDetail[3],
         price: transactionDetail[4],
-        createdAt: transactionDetail[5],
+        createdAt: transactionDetail[5].toString(),
       };
     }
   );
