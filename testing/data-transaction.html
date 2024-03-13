@@ -7,6 +7,7 @@
     <title>All Data Transaction</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
 </head>
 
 <body>
@@ -26,13 +27,8 @@
                     target="_blank">Here</a>
                 (link can be changed based transaction hash of smart contract in this project)
             </div>
-
-            <h5 id="loading" style="display: none;">
-                Loading...
-            </h5>
-
             <div class="table-responsive">
-                <table class="table table-striped" id="data-all-transaction">
+                <table class="table table-striped" id="table-data-all-transaction">
                     <thead>
                         <tr>
                             <th>Transaction ID</th>
@@ -52,25 +48,22 @@
 
                 </table>
             </div>
+            <div class="d-flex justify-content-center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item" id="previousPage">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <!-- Paginated links will be dynamically added here -->
+                        <li class="page-item" id="nextPage">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     </div>
-
-    <style>
-        #loading {
-            position: fixed;
-            z-index: 999;
-            height: 2em;
-            width: 100%;
-            overflow: show;
-            margin: auto;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            text-align: center;
-        }
-    </style>
 
     <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -78,47 +71,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
 
     <script>
         $(document).ready(function () {
-            loadTable();
-
-            // handle refresh button
-            $("#refreshButton").click(function () {
-                emptyTable();
-                loadTable();
-            });
-
-            function emptyTable() {
-                $("#data-all-transaction").find("tr:gt(0)").remove();
-            }
-
-            function loadTable() {
-                $.get("/api/transactions", function (data, status) {
-                    data.transactions.forEach((transaction) => {
-                        $("#data-all-transaction").append(
-                            `<tr>
-                            <td>${transaction.transactionId}</td>
-                            <td>${transaction.transactionCode}</td>
-                            <td>${transaction.buyer}</td>
-                            <td>${transaction.buyerId}</td>
-                            <td>${transaction.sellerCompany}</td>
-                            <td>${transaction.sellerId}</td>
-                            <td>${transaction.sumOfProduct}</td>
-                            <td>${transaction.totalPrice}</td>
-                            <td>${transaction.paymentStatus}</td>
-                            <td>${transaction.createdAt}</td>
-                            </tr>`
-                        );
-                    });
+            $(document).ready(function () {
+                $('#table-data-all-transaction').DataTable({
+                    ajax: {
+                        url: '/api/transactions',
+                        dataSrc: 'data'
+                    },
+                    columns: [
+                        {data: 'transactionId'},
+                        {data: 'transactionCode'},
+                        {data: 'buyer'},
+                        {data: 'buyerId'},
+                        {data: 'sellerCompany'},
+                        {data: 'sellerId'},
+                        {data: 'sumOfProduct'},
+                        {data: 'totalPrice'},
+                        {data: 'paymentStatus'},
+                        {data: 'createdAt'}
+                    ]
                 });
-            }
-        });
 
-        $(document).ajaxStart(function () {
-            $("#loading").show();
-        }).ajaxStop(function () {
-            $("#loading").hide();
+                // handle refresh button
+                $("#refreshButton").click(function () {
+                    $('#table-data-all-transaction').DataTable().ajax.reload();
+                });
+            });
         });
     </script>
 </body>

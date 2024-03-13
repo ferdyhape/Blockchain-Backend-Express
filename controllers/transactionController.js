@@ -13,9 +13,12 @@ export const getTransactions = async (req, res) => {
     // Call the service function
     const transactions = await getAllTransactionService();
 
-    return res.status(200).json({ transactions });
+    return res.status(200).json({
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
   } catch (error) {
-    console.error("Error fetching products from contract:", error);
+    console.error("Error fetching transactions:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

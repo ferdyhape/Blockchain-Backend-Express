@@ -13,7 +13,10 @@ export const getTransactionDetails = async (req, res) => {
     // Call the service function
     const transactionDetails = await getAllTransactionDetailService();
 
-    return res.status(200).json({ transactionDetails });
+    return res.status(200).json({
+      message: "Transaction details fetched successfully",
+      data: transactionDetails,
+    });
   } catch (error) {
     console.error("Error fetching transaction details from contract:", error);
     res.status(500).json({ error: "Internal server error" });
