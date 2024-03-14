@@ -5,11 +5,11 @@ import {
   CONTRACT_ADDRESS_TRANSACTION,
   CONTRACT_ADDRESS_TRANSACTION_DETAIL,
   PRIVATE_KEY,
-  INFURA_URL,
+  API_URL,
   WALLET_ADDRESS,
 } from "../config/smartContractConfig.js";
 
-const web3 = new Web3(INFURA_URL);
+const web3 = new Web3(API_URL);
 
 const validateUseFor = (useFor) => {
   if (useFor === "transaction") {
@@ -31,6 +31,7 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
   try {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
+    console.log("nonce:", nonce);
     let gasPrice = await web3.eth.getGasPrice();
     if (useFor === "transactionDetail") {
       gasPrice = gasPrice.toString() * 2;

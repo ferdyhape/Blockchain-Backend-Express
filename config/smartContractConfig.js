@@ -637,6 +637,6 @@ export const CONTRACT_ADDRESS_TRANSACTION_DETAIL =
 
 export const PRIVATE_KEY = process.env.MY_WALLET_PRIVATE_KEY;
 
-export const INFURA_URL = process.env.INFURA_URL_API;
+export const API_URL = process.env.API_URL;
 
 export const WALLET_ADDRESS = process.env.MY_WALLET_ADDRESS;

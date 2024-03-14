@@ -39,6 +39,7 @@ export const addTransactionDetail = async (req, res) => {
     price,
     createdAt,
   ];
+  console.log("arrayParams: ", arrayParams);
   var response = await sendRawTx(
     arrayParams,
     "addTransactionDetail",

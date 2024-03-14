@@ -33,7 +33,6 @@ export const addTransaction = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   // validate end
-
   try {
     addTransactionToQueue(req.body);
     return res.status(200).json({
