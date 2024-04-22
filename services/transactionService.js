@@ -44,5 +44,5 @@ export const addTransaction = async (req) => {
     createdAt,
   ];
   var response = await sendRawTx(arrayParams, "addTransaction", "transaction");
-  console.log("transaction hash: ", response.transactionHash);
+  // console.log("transaction hash: ", response.transactionHash);
 };

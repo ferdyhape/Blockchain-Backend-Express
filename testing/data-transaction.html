@@ -79,7 +79,10 @@
                 $('#table-data-all-transaction').DataTable({
                     ajax: {
                         url: '/api/transactions',
-                        dataSrc: 'data'
+                        dataSrc: 'data',
+                        headers: {
+                            "Authorization": "ywIk)w-mx%0be?gy~hCSA@%tr6>gJ|,v"
+                        },
                     },
                     columns: [
                         {data: 'transactionId'},

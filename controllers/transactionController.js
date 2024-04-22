@@ -4,15 +4,11 @@ import {
 } from "../services/transactionService.js";
 import { validationResult } from "express-validator";
 import { validateAddTransaction } from "../requests/transactionRequest.js";
-
-// init transaction queue
 import { addTransactionToQueue } from "../queue/transactionQueue.js";
 
 export const getTransactions = async (req, res) => {
   try {
-    // Call the service function
     const transactions = await getAllTransactionService();
-
     return res.status(200).json({
       message: "Transactions fetched successfully",
       data: transactions,
@@ -24,19 +20,18 @@ export const getTransactions = async (req, res) => {
 };
 
 export const addTransaction = async (req, res) => {
-  // validate start
-  await Promise.all(
-    validateAddTransaction.map((validator) => validator.run(req))
-  );
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  // validate end
   try {
-    addTransactionToQueue(req.body);
-    return res.status(200).json({
-      message: "Transaction add on progress...",
+    Promise.all(
+      validateAddTransaction.map((validator) => validator.run(req))
+    ).then(() => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      addTransactionToQueue(req.body);
+      return res.status(200).json({
+        message: "Transaction add in progress...",
+      });
     });
   } catch (error) {
     console.error("Error adding transaction:", error);

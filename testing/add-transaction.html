@@ -103,6 +103,10 @@
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
+                // add header Authorization
+                headers: {
+                    "Authorization": "ywIk)w-mx%0be?gy~hCSA@%tr6>gJ|,v"
+                },
                 success: function (response) {
                     alert('Save transaction on progress');
                     $('#form-transaction').trigger('reset');

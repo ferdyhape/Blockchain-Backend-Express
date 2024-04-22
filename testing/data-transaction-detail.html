@@ -83,7 +83,10 @@
             let table = $('#data-all-transaction-detail').DataTable({
                 ajax: {
                     url: '/api/transaction-details',
-                    dataSrc: 'data'
+                    dataSrc: 'data',
+                    headers: {
+                        "Authorization": "ywIk)w-mx%0be?gy~hCSA@%tr6>gJ|,v"
+                    },
                 },
                 columns: [
                     {data: 'transactionCode'},

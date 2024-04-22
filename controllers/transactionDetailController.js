@@ -10,9 +10,7 @@ import { addTransactionDetailToQueue } from "../queue/transactionDetailQueue.js"
 
 export const getTransactionDetails = async (req, res) => {
   try {
-    // Call the service function
     const transactionDetails = await getAllTransactionDetailService();
-
     return res.status(200).json({
       message: "Transaction details fetched successfully",
       data: transactionDetails,
@@ -24,7 +22,6 @@ export const getTransactionDetails = async (req, res) => {
 };
 
 export const addTransactionDetail = async (req, res) => {
-  // validate start
   await Promise.all(
     validateAddTransactionDetail.map((validator) => validator.run(req))
   );

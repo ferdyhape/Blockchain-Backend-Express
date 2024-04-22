@@ -21,11 +21,11 @@ const TransactionDetailQueue = new Queue("transactionDetail");
 // Define the process handler to handle incoming jobs
 TransactionDetailQueue.process(async (job) => {
   const { data } = job;
-  console.log("Processing transaction detail...", data);
+  // console.log("Processing transaction detail...", data);
   await addTransactionDetail(data);
 });
 
 export const addTransactionDetailToQueue = (data) => {
   TransactionDetailQueue.add(data);
-  console.log("Transaction detail added to queue...");
+  // console.log("Transaction detail added to queue...");
 };
