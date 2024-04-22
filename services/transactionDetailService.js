@@ -30,7 +30,7 @@ export const addTransactionDetail = async (req, res) => {
     tokenOfProduct,
     price,
     createdAt,
-  } = req.body;
+  } = req;
   const arrayParams = [
     transactionCode,
     productName,
@@ -44,5 +44,5 @@ export const addTransactionDetail = async (req, res) => {
     "addTransactionDetail",
     "transactionDetail"
   );
-  return response;
+  console.log("transaction hash: ", response.transactionHash);
 };

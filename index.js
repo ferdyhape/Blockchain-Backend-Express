@@ -27,4 +27,7 @@ app.use("/test", TestRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Server is running on port ${process.env.APP_PORT}`);
+  console.log(
+    `Open http://localhost:${process.env.APP_PORT} to see the result`
+  );
 });

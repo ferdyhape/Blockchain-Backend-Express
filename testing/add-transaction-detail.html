@@ -13,7 +13,7 @@
     <div class="container">
         <h2 class="mt-5 text-center">Testing Save Transaction Detail</h2>
         <div class="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto form my-5">
-            <form action="/api/transaction-details" method="POST">
+            <form id="form-transaction-detail" method="POST">
                 <div class="mb-3">
                     <input class="form-control" type="text" placeholder="Transaction Code..." name="transactionCode[]"
                         id="transactionCode" required />
@@ -68,6 +68,28 @@
                 $('#tokenOfProduct').val(faker.datatype.number());
                 $('#price').val(faker.commerce.price());
                 $('#createdAt').val(faker.date.recent().getTime());
+            });
+        });
+
+        $('#form-transaction-detail').submit(function (e) {
+            e.preventDefault();
+            let data = $(this).serializeArray();
+            console.log(data);
+            $.ajax({
+                url: '/api/transaction-details',
+                method: 'POST',
+                data: data,
+                headers: {
+                    "Authorization": "ywIk)w-mx%0be?gy~hCSA@%tr6>gJ|,v"
+                },
+                success: function (response) {
+                    console.log(response);
+                    alert('Data has been saved');
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('Failed to save data');
+                }
             });
         });
     </script>
