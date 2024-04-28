@@ -13,8 +13,9 @@ export const getAllTransactionDetail = async () => {
         productName: transactionDetail[1],
         productDescription: transactionDetail[2],
         tokenOfProduct: transactionDetail[3],
-        price: transactionDetail[4],
-        createdAt: transactionDetail[5].toString(),
+        productId: transactionDetail[4],
+        price: transactionDetail[5],
+        createdAt: transactionDetail[6].toString(),
       };
     }
   );
@@ -28,6 +29,7 @@ export const addTransactionDetail = async (req, res) => {
     productName,
     productDescription,
     tokenOfProduct,
+    productId,
     price,
     createdAt,
   } = req;
@@ -36,6 +38,7 @@ export const addTransactionDetail = async (req, res) => {
     productName,
     productDescription,
     tokenOfProduct,
+    productId,
     price,
     createdAt,
   ];
