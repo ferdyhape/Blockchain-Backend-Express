@@ -3,7 +3,7 @@ import {
   getTransactionDetails,
   addTransactionDetail,
 } from "../controllers/transactionDetailController.js";
-import { validateTokenMiddleware } from "../config/app.js";
+import validateTokenMiddleware from "../middleware/validateToken.js";
 
 const router = express.Router();
 

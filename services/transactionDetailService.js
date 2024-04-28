@@ -1,6 +1,8 @@
 import { createContractInstance, sendRawTx } from "../services/web3Service.js";
+import { consoleForDevelop } from "../config/app.js";
 
 export const getAllTransactionDetail = async () => {
+  consoleForDevelop("Get Transaction Details Process [Service]");
   const contract = await createContractInstance("transactionDetail");
   const transactionDetails = await contract.methods
     .getAllTransactionDetail()
@@ -20,10 +22,12 @@ export const getAllTransactionDetail = async () => {
     }
   );
 
+  consoleForDevelop("Transaction details fetched successfully", "footer");
   return mappedTransactionDetails;
 };
 
 export const addTransactionDetail = async (req, res) => {
+  consoleForDevelop("Add Transaction Detail Process [Service]");
   const {
     transactionCode,
     productName,
@@ -47,5 +51,14 @@ export const addTransactionDetail = async (req, res) => {
     "addTransactionDetail",
     "transactionDetail"
   );
-  console.log("transaction hash: ", response.transactionHash);
+  if (response.transactionHash) {
+    consoleForDevelop(
+      [
+        "Transaction detail added successfully",
+        "Transaction Hash: " + response.transactionHash,
+      ],
+      "footer"
+    );
+    return response.transactionHash;
+  }
 };

@@ -2,6 +2,7 @@ import Queue from "bull";
 import { addTransaction } from "../services/transactionService.js";
 import dotenv from "dotenv";
 import { Redis } from "@upstash/redis";
+import { consoleForDevelop } from "../config/app.js";
 
 dotenv.config();
 
@@ -20,11 +21,10 @@ const transactionQueue = new Queue("transactions");
 // Define the process handler to handle incoming jobs
 transactionQueue.process(async (job) => {
   const { data } = job;
-  // console.log("Processing transaction...", data);
   await addTransaction(data);
 });
 
 export const addTransactionToQueue = (data) => {
+  consoleForDevelop("Add Transaction Process [Queue]");
   transactionQueue.add(data);
-  // console.log("Transaction added to queue...");
 };

@@ -1,10 +1,25 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-export const validateTokenMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (token !== process.env.API_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
+export const consoleForDevelop = (stringText, isHeaderOrFooter = null) => {
+  if (process.env.APP_ENV === "development") {
+    if (isHeaderOrFooter === "header") {
+      console.log("\n\n--------");
+      console.log(
+        "==========================================================="
+      );
+      console.log("Console For Developing Process");
+      console.log(
+        "==========================================================="
+      );
+      console.log("Start Process...");
+    }
+    console.log(stringText);
+    if (isHeaderOrFooter === "footer") {
+      console.log(
+        "==========================================================="
+      );
+      console.log("--------\n\n");
+    }
   }
-  next();
 };
