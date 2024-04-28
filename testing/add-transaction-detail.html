@@ -31,6 +31,10 @@
                         id="tokenOfProduct" required />
                 </div>
                 <div class="mb-3">
+                    <input class="form-control" type="number" placeholder="Product Id..." name="productId[]"
+                        id="productId" required />
+                </div>
+                <div class="mb-3">
                     <input class="form-control" type="number" placeholder="Price..." name="price[]" id="price"
                         required />
                 </div>
@@ -66,6 +70,7 @@
                 $('#productName').val(faker.commerce.productName());
                 $('#productDescription').val(faker.commerce.productDescription());
                 $('#tokenOfProduct').val(faker.datatype.number());
+                $('#productId').val(faker.datatype.number());
                 $('#price').val(faker.commerce.price());
                 $('#createdAt').val(faker.date.recent().getTime());
             });

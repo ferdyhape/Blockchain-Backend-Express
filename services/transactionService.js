@@ -7,14 +7,13 @@ export const getAllTransaction = async () => {
     return {
       transactionId: transaction[0].toString(),
       transactionCode: transaction[1],
-      buyer: transaction[2],
-      buyerId: transaction[3],
-      sellerCompany: transaction[4],
-      sellerId: transaction[5],
-      sumOfProduct: transaction[6].toString(),
-      totalPrice: transaction[7],
-      paymentStatus: transaction[8],
-      createdAt: transaction[9].toString(),
+      from: transaction[2],
+      fromId: transaction[3],
+      to: transaction[4],
+      toId: transaction[5],
+      orderType: transaction[6],
+      paymentStatus: transaction[7],
+      createdAt: transaction[8].toString(),
     };
   });
   return mappedTransactions;
@@ -23,23 +22,21 @@ export const getAllTransaction = async () => {
 export const addTransaction = async (req) => {
   const {
     transactionCode,
-    buyer,
-    buyerId,
-    sellerCompany,
-    sellerId,
-    sumOfProduct,
-    totalPrice,
+    from,
+    fromId,
+    to,
+    toId,
+    orderType,
     paymentStatus,
     createdAt,
   } = req;
   let arrayParams = [
     transactionCode,
-    buyer,
-    buyerId,
-    sellerCompany,
-    sellerId,
-    sumOfProduct,
-    totalPrice,
+    from,
+    fromId,
+    to,
+    toId,
+    orderType,
     paymentStatus,
     createdAt,
   ];

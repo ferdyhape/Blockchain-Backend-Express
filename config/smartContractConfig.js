@@ -45,37 +45,31 @@ export const ABI_TRANSACTION = [
       {
         indexed: false,
         internalType: "string",
-        name: "buyer",
+        name: "from",
         type: "string",
       },
       {
         indexed: false,
         internalType: "string",
-        name: "buyerId",
+        name: "fromId",
         type: "string",
       },
       {
         indexed: false,
         internalType: "string",
-        name: "sellerCompany",
+        name: "to",
         type: "string",
       },
       {
         indexed: false,
         internalType: "string",
-        name: "sellerId",
+        name: "toId",
         type: "string",
       },
       {
         indexed: false,
-        internalType: "uint256",
-        name: "sumOfProduct",
-        type: "uint256",
-      },
-      {
-        indexed: false,
         internalType: "string",
-        name: "totalPrice",
+        name: "orderType",
         type: "string",
       },
       {
@@ -103,32 +97,27 @@ export const ABI_TRANSACTION = [
       },
       {
         internalType: "string",
-        name: "_buyer",
+        name: "_from",
         type: "string",
       },
       {
         internalType: "string",
-        name: "_buyerId",
+        name: "_fromId",
         type: "string",
       },
       {
         internalType: "string",
-        name: "_sellerCompany",
+        name: "_to",
         type: "string",
       },
       {
         internalType: "string",
-        name: "_sellerId",
+        name: "_toId",
         type: "string",
       },
       {
-        internalType: "uint256",
-        name: "_sumOfProduct",
-        type: "uint256",
-      },
-      {
         internalType: "string",
-        name: "_totalPrice",
+        name: "_orderType",
         type: "string",
       },
       {
@@ -165,32 +154,27 @@ export const ABI_TRANSACTION = [
           },
           {
             internalType: "string",
-            name: "buyer",
+            name: "from",
             type: "string",
           },
           {
             internalType: "string",
-            name: "buyerId",
+            name: "fromId",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerCompany",
+            name: "to",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerId",
+            name: "toId",
             type: "string",
           },
           {
-            internalType: "uint256",
-            name: "sumOfProduct",
-            type: "uint256",
-          },
-          {
             internalType: "string",
-            name: "totalPrice",
+            name: "orderType",
             type: "string",
           },
           {
@@ -236,32 +220,27 @@ export const ABI_TRANSACTION = [
           },
           {
             internalType: "string",
-            name: "buyer",
+            name: "from",
             type: "string",
           },
           {
             internalType: "string",
-            name: "buyerId",
+            name: "fromId",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerCompany",
+            name: "to",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerId",
+            name: "toId",
             type: "string",
           },
           {
-            internalType: "uint256",
-            name: "sumOfProduct",
-            type: "uint256",
-          },
-          {
             internalType: "string",
-            name: "totalPrice",
+            name: "orderType",
             type: "string",
           },
           {
@@ -307,32 +286,27 @@ export const ABI_TRANSACTION = [
           },
           {
             internalType: "string",
-            name: "buyer",
+            name: "from",
             type: "string",
           },
           {
             internalType: "string",
-            name: "buyerId",
+            name: "fromId",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerCompany",
+            name: "to",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerId",
+            name: "toId",
             type: "string",
           },
           {
-            internalType: "uint256",
-            name: "sumOfProduct",
-            type: "uint256",
-          },
-          {
             internalType: "string",
-            name: "totalPrice",
+            name: "orderType",
             type: "string",
           },
           {
@@ -378,32 +352,27 @@ export const ABI_TRANSACTION = [
           },
           {
             internalType: "string",
-            name: "buyer",
+            name: "from",
             type: "string",
           },
           {
             internalType: "string",
-            name: "buyerId",
+            name: "fromId",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerCompany",
+            name: "to",
             type: "string",
           },
           {
             internalType: "string",
-            name: "sellerId",
+            name: "toId",
             type: "string",
           },
           {
-            internalType: "uint256",
-            name: "sumOfProduct",
-            type: "uint256",
-          },
-          {
             internalType: "string",
-            name: "totalPrice",
+            name: "orderType",
             type: "string",
           },
           {
@@ -460,32 +429,27 @@ export const ABI_TRANSACTION = [
       },
       {
         internalType: "string",
-        name: "buyer",
+        name: "from",
         type: "string",
       },
       {
         internalType: "string",
-        name: "buyerId",
+        name: "fromId",
         type: "string",
       },
       {
         internalType: "string",
-        name: "sellerCompany",
+        name: "to",
         type: "string",
       },
       {
         internalType: "string",
-        name: "sellerId",
+        name: "toId",
         type: "string",
       },
       {
-        internalType: "uint256",
-        name: "sumOfProduct",
-        type: "uint256",
-      },
-      {
         internalType: "string",
-        name: "totalPrice",
+        name: "orderType",
         type: "string",
       },
       {
@@ -516,7 +480,7 @@ export const ABI_TRANSACTION = [
       },
       {
         internalType: "uint256",
-        name: "_createdAt",
+        name: "_updatedAt",
         type: "uint256",
       },
     ],
@@ -552,6 +516,11 @@ export const ABI_TRANSACTION_DETAIL = [
       },
       {
         internalType: "string[]",
+        name: "_productId",
+        type: "string[]",
+      },
+      {
+        internalType: "string[]",
         name: "_price",
         type: "string[]",
       },
@@ -565,6 +534,55 @@ export const ABI_TRANSACTION_DETAIL = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "transactionCode",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "productName",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "productDescription",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "tokenOfProduct",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "productId",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "price",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "createdAt",
+        type: "uint256",
+      },
+    ],
+    name: "TransactionDetailAdded",
+    type: "event",
   },
   {
     inputs: [],
@@ -590,6 +608,11 @@ export const ABI_TRANSACTION_DETAIL = [
           {
             internalType: "string",
             name: "tokenOfProduct",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "productId",
             type: "string",
           },
           {
@@ -641,6 +664,11 @@ export const ABI_TRANSACTION_DETAIL = [
           {
             internalType: "string",
             name: "tokenOfProduct",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "productId",
             type: "string",
           },
           {
@@ -703,6 +731,11 @@ export const ABI_TRANSACTION_DETAIL = [
       {
         internalType: "string",
         name: "tokenOfProduct",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "productId",
         type: "string",
       },
       {

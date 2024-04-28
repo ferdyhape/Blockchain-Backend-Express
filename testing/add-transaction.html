@@ -19,27 +19,21 @@
                         id="transactionCode" required />
                 </div>
                 <div class="mb-3">
-                    <input class="form-control" type="text" placeholder="Buyer..." name="buyer" id="buyer" required />
+                    <input class="form-control" type="text" placeholder="From..." name="from" id="from" required />
                 </div>
                 <div class="mb-3">
-                    <input class="form-control" type="number" placeholder="Buyer ID..." name="buyerId" id="buyerId"
+                    <input class="form-control" type="number" placeholder="From ID..." name="fromId" id="fromId"
                         required />
                 </div>
                 <div class="mb-3">
-                    <input class="form-control" type="text" placeholder="Seller Company..." name="sellerCompany"
-                        id="sellerCompany" required />
+                    <input class="form-control" type="text" placeholder="To..." name="to" id="to" required />
                 </div>
                 <div class="mb-3">
-                    <input class="form-control" type="number" placeholder="Seller ID..." name="sellerId" id="sellerId"
+                    <input class="form-control" type="number" placeholder="To ID..." name="toId" id="toId" required />
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" type="text" placeholder="Order Type..." name="orderType" id="orderType"
                         required />
-                </div>
-                <div class="mb-3">
-                    <input class="form-control" type="number" placeholder="Sum of Product..." name="sumOfProduct"
-                        id="sumOfProduct" required />
-                </div>
-                <div class="mb-3">
-                    <input class="form-control" type="number" placeholder="Total Price..." name="totalPrice"
-                        id="totalPrice" required />
                 </div>
                 <div class="mb-3">
                     <input class="form-control" type="text" placeholder="Payment Status..." name="paymentStatus"
@@ -60,7 +54,6 @@
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -71,15 +64,15 @@
     <script type="module">
         import {faker} from 'https://cdn.jsdelivr.net/npm/@faker-js/faker/+esm';
         $(document).ready(function () {
+            var orderType = ['BUY', 'SELL'];
             $('#generateRandomData').click(function (e) {
                 e.preventDefault();
                 $('#transactionCode').val(faker.string.uuid());
-                $('#buyer').val(faker.person.fullName());
-                $('#buyerId').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
-                $('#sellerCompany').val(faker.company.name());
-                $('#sellerId').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
-                $('#sumOfProduct').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
-                $('#totalPrice').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
+                $('#from').val(faker.person.fullName());
+                $('#fromId').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
+                $('#to').val(faker.company.name());
+                $('#toId').val(faker.number.bigInt({min: 10n, max: 1000000000n}));
+                $('#orderType').val(orderType[Math.floor(Math.random() * orderType.length)]);
                 $('#paymentStatus').val('PENDING');
                 $('#createdAt').val(faker.date.recent().getTime());
             });
@@ -89,12 +82,11 @@
             e.preventDefault();
             let data = {
                 transactionCode: $('#transactionCode').val(),
-                buyer: $('#buyer').val(),
-                buyerId: $('#buyerId').val(),
-                sellerCompany: $('#sellerCompany').val(),
-                sellerId: $('#sellerId').val(),
-                sumOfProduct: $('#sumOfProduct').val(),
-                totalPrice: $('#totalPrice').val(),
+                from: $('#from').val(),
+                fromId: $('#fromId').val(),
+                to: $('#to').val(),
+                toId: $('#toId').val(),
+                orderType: $('#orderType').val(),
                 paymentStatus: $('#paymentStatus').val(),
                 createdAt: $('#createdAt').val()
             };
