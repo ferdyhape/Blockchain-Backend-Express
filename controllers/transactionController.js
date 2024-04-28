@@ -5,8 +5,10 @@ import {
 import { validationResult } from "express-validator";
 import { validateAddTransaction } from "../requests/transactionRequest.js";
 import { addTransactionToQueue } from "../queue/transactionQueue.js";
+import { consoleForDevelop } from "../config/app.js";
 
 export const getTransactions = async (req, res) => {
+  consoleForDevelop("Get Transactions Process [Controller]", "header");
   try {
     const transactions = await getAllTransactionService();
     return res.status(200).json({
@@ -20,7 +22,9 @@ export const getTransactions = async (req, res) => {
 };
 
 export const addTransaction = async (req, res) => {
+  consoleForDevelop("Add Transaction Process [Controller]", "header");
   try {
+    consoleForDevelop("Validating transaction data [Controller]");
     Promise.all(
       validateAddTransaction.map((validator) => validator.run(req))
     ).then(() => {

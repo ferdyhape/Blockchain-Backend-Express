@@ -8,6 +8,7 @@ import {
   API_URL,
   WALLET_ADDRESS,
 } from "../config/smartContractConfig.js";
+import { consoleForDevelop } from "../config/app.js";
 
 const web3 = new Web3(API_URL);
 
@@ -22,12 +23,14 @@ const validateUseFor = (useFor) => {
 };
 
 export const createContractInstance = async (useFor) => {
+  consoleForDevelop("Create Contract Instance Process [Web3 Service]");
   const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
   const contract = new web3.eth.Contract(abiUsed, contractAddressUsed);
   return contract;
 };
 
 export const sendRawTx = async (arrayParams, method, useFor) => {
+  consoleForDevelop("Send Raw Transaction Process [SendRawTx Web3 Service]");
   try {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
@@ -39,7 +42,6 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     const contract = new web3.eth.Contract(abiUsed, contractAddressUsed);
     const data = contract.methods[method](...arrayParams).encodeABI();
 
-    console.log("sending raw transaction...");
     const rawTx = {
       nonce: web3.utils.toHex(nonce),
       gasPrice: web3.utils.toHex(gasPrice),
