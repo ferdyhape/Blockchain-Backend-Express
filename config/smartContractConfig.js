@@ -3,39 +3,66 @@ dotenv.config();
 
 export const ABI_TRANSACTION = [
   {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: "uint256",
-        name: "transactionId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
         internalType: "string",
-        name: "paymentStatus",
+        name: "_transactionCode",
         type: "string",
       },
       {
-        indexed: false,
         internalType: "uint256",
-        name: "updatedAt",
+        name: "_campaignId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_fromToUserId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_orderType",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_paymentStatus",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_status",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_totalPrice",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_createdAt",
         type: "uint256",
       },
     ],
-    name: "PaymentStatusUpdated",
-    type: "event",
+    name: "addTransaction",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "transactionId",
-        type: "uint256",
-      },
       {
         indexed: false,
         internalType: "string",
@@ -45,26 +72,52 @@ export const ABI_TRANSACTION = [
       {
         indexed: false,
         internalType: "string",
-        name: "from",
+        name: "newPaymentStatus",
+        type: "string",
+      },
+    ],
+    name: "PaymentStatusUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "transactionCode",
         type: "string",
       },
       {
         indexed: false,
         internalType: "string",
-        name: "fromId",
+        name: "newStatus",
+        type: "string",
+      },
+    ],
+    name: "StatusUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "transactionCode",
         type: "string",
       },
       {
         indexed: false,
-        internalType: "string",
-        name: "to",
-        type: "string",
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: "string",
-        name: "toId",
-        type: "string",
+        internalType: "uint256",
+        name: "fromToUserId",
+        type: "uint256",
       },
       {
         indexed: false,
@@ -77,6 +130,24 @@ export const ABI_TRANSACTION = [
         internalType: "string",
         name: "paymentStatus",
         type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "status",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalPrice",
+        type: "uint256",
       },
       {
         indexed: false,
@@ -97,80 +168,53 @@ export const ABI_TRANSACTION = [
       },
       {
         internalType: "string",
-        name: "_from",
+        name: "_newPaymentStatus",
         type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_fromId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_to",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_toId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_orderType",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_paymentStatus",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_createdAt",
-        type: "uint256",
       },
     ],
-    name: "addTransaction",
+    name: "updatePaymentStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_transactionCode",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_newStatus",
+        type: "string",
+      },
+    ],
+    name: "updateStatus",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "getAllTransaction",
+    name: "getAllTransactions",
     outputs: [
       {
         components: [
-          {
-            internalType: "uint256",
-            name: "transactionId",
-            type: "uint256",
-          },
           {
             internalType: "string",
             name: "transactionCode",
             type: "string",
           },
           {
-            internalType: "string",
-            name: "from",
-            type: "string",
+            internalType: "uint256",
+            name: "campaignId",
+            type: "uint256",
           },
           {
-            internalType: "string",
-            name: "fromId",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "to",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "toId",
-            type: "string",
+            internalType: "uint256",
+            name: "fromToUserId",
+            type: "uint256",
           },
           {
             internalType: "string",
@@ -181,6 +225,21 @@ export const ABI_TRANSACTION = [
             internalType: "string",
             name: "paymentStatus",
             type: "string",
+          },
+          {
+            internalType: "string",
+            name: "status",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "quantity",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalPrice",
+            type: "uint256",
           },
           {
             internalType: "uint256",
@@ -199,44 +258,29 @@ export const ABI_TRANSACTION = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_transactionId",
-        type: "uint256",
+        internalType: "string",
+        name: "_transactionCode",
+        type: "string",
       },
     ],
-    name: "getTransaction",
+    name: "getTransactionByCode",
     outputs: [
       {
         components: [
-          {
-            internalType: "uint256",
-            name: "transactionId",
-            type: "uint256",
-          },
           {
             internalType: "string",
             name: "transactionCode",
             type: "string",
           },
           {
-            internalType: "string",
-            name: "from",
-            type: "string",
+            internalType: "uint256",
+            name: "campaignId",
+            type: "uint256",
           },
           {
-            internalType: "string",
-            name: "fromId",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "to",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "toId",
-            type: "string",
+            internalType: "uint256",
+            name: "fromToUserId",
+            type: "uint256",
           },
           {
             internalType: "string",
@@ -247,6 +291,21 @@ export const ABI_TRANSACTION = [
             internalType: "string",
             name: "paymentStatus",
             type: "string",
+          },
+          {
+            internalType: "string",
+            name: "status",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "quantity",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalPrice",
+            type: "uint256",
           },
           {
             internalType: "uint256",
@@ -265,44 +324,29 @@ export const ABI_TRANSACTION = [
   {
     inputs: [
       {
-        internalType: "string",
-        name: "_buyerId",
-        type: "string",
+        internalType: "uint256",
+        name: "_fromToUserId",
+        type: "uint256",
       },
     ],
-    name: "getTransactionByBuyerId",
+    name: "getTransactionByFromToUserId",
     outputs: [
       {
         components: [
-          {
-            internalType: "uint256",
-            name: "transactionId",
-            type: "uint256",
-          },
           {
             internalType: "string",
             name: "transactionCode",
             type: "string",
           },
           {
-            internalType: "string",
-            name: "from",
-            type: "string",
+            internalType: "uint256",
+            name: "campaignId",
+            type: "uint256",
           },
           {
-            internalType: "string",
-            name: "fromId",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "to",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "toId",
-            type: "string",
+            internalType: "uint256",
+            name: "fromToUserId",
+            type: "uint256",
           },
           {
             internalType: "string",
@@ -313,6 +357,21 @@ export const ABI_TRANSACTION = [
             internalType: "string",
             name: "paymentStatus",
             type: "string",
+          },
+          {
+            internalType: "string",
+            name: "status",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "quantity",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalPrice",
+            type: "uint256",
           },
           {
             internalType: "uint256",
@@ -331,77 +390,17 @@ export const ABI_TRANSACTION = [
   {
     inputs: [
       {
-        internalType: "string",
-        name: "_sellerId",
-        type: "string",
-      },
-    ],
-    name: "getTransactionBySellerId",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "transactionId",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "transactionCode",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "from",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "fromId",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "to",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "toId",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "orderType",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "paymentStatus",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "createdAt",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct TransactionContract.Transaction[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "transactionCount",
-    outputs: [
-      {
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    name: "transactionCodes",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -410,42 +409,27 @@ export const ABI_TRANSACTION = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "",
-        type: "uint256",
+        type: "string",
       },
     ],
     name: "transactions",
     outputs: [
-      {
-        internalType: "uint256",
-        name: "transactionId",
-        type: "uint256",
-      },
       {
         internalType: "string",
         name: "transactionCode",
         type: "string",
       },
       {
-        internalType: "string",
-        name: "from",
-        type: "string",
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
       },
       {
-        internalType: "string",
-        name: "fromId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "to",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "toId",
-        type: "string",
+        internalType: "uint256",
+        name: "fromToUserId",
+        type: "uint256",
       },
       {
         internalType: "string",
@@ -458,35 +442,27 @@ export const ABI_TRANSACTION = [
         type: "string",
       },
       {
+        internalType: "string",
+        name: "status",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalPrice",
+        type: "uint256",
+      },
+      {
         internalType: "uint256",
         name: "createdAt",
         type: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_transactionId",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_paymentStatus",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_updatedAt",
-        type: "uint256",
-      },
-    ],
-    name: "updatePaymentStatus",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];

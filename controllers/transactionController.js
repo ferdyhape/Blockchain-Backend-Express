@@ -1,10 +1,19 @@
 import {
   getAllTransaction as getAllTransactionService,
-  addTransaction as addTransactionService,
+  getTranasctionByCode as getTranasctionByCodeService,
+  getTransactionByFromToUserId as getTransactionByFromToUserIdService,
 } from "../services/transactionService.js";
 import { validationResult } from "express-validator";
-import { validateAddTransaction } from "../requests/transactionRequest.js";
-import { addTransactionToQueue } from "../queue/transactionQueue.js";
+import {
+  validateAddTransaction,
+  validateUpdateTransactionStatus,
+  validateUpdateTransactionPaymentStatus,
+} from "../requests/transactionRequest.js";
+import {
+  addTransactionToQueue,
+  updateTransactionStatusToQueue,
+  updateTransactionPaymentStatusToQueue,
+} from "../queue/transactionQueue.js";
 import { consoleForDevelop } from "../config/app.js";
 
 export const getTransactions = async (req, res) => {
@@ -17,6 +26,47 @@ export const getTransactions = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getTransactionByCode = async (req, res) => {
+  consoleForDevelop("Get Transaction by Code Process [Controller]", "header");
+  try {
+    const transaction = await getTranasctionByCodeService(
+      req.params.transactionCode
+    );
+    if (transaction.length === 0) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+    return res.status(200).json({
+      message: "Transaction fetched successfully",
+      data: transaction,
+    });
+  } catch (error) {
+    console.error("Error fetching transaction by code:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getTransactionByFromToUserId = async (req, res) => {
+  consoleForDevelop(
+    "Get Transaction by FromToUserId Process [Controller]",
+    "header"
+  );
+  try {
+    const transactions = await getTransactionByFromToUserIdService(
+      req.params.fromToUserId
+    );
+    if (transactions.length === 0) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+    return res.status(200).json({
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching transaction by fromToUserId:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -39,6 +89,55 @@ export const addTransaction = async (req, res) => {
     });
   } catch (error) {
     console.error("Error adding transaction:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateTransactionStatus = async (req, res) => {
+  consoleForDevelop("Update Transaction Status Process [Controller]", "header");
+  try {
+    consoleForDevelop("Validating transaction data [Controller]");
+    Promise.all(
+      validateUpdateTransactionStatus.map((validator) => validator.run(req))
+    ).then(() => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      updateTransactionStatusToQueue(req.body);
+      return res.status(200).json({
+        message: "Transaction status update in progress...",
+      });
+    });
+  } catch (error) {
+    console.error("Error updating transaction status:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateTransactionPaymentStatus = async (req, res) => {
+  consoleForDevelop(
+    "Update Transaction Payment Status Process [Controller]",
+    "header"
+  );
+  try {
+    consoleForDevelop("Validating transaction data [Controller]");
+    Promise.all(
+      validateUpdateTransactionPaymentStatus.map((validator) =>
+        validator.run(req)
+      )
+    ).then(() => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      updateTransactionPaymentStatusToQueue(req.body);
+      return res.status(200).json({
+        message: "Transaction payment status update in progress...",
+      });
+    });
+  } catch (error) {
+    console.error("Error updating transaction payment status:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

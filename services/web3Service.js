@@ -31,6 +31,11 @@ export const createContractInstance = async (useFor) => {
 
 export const sendRawTx = async (arrayParams, method, useFor) => {
   consoleForDevelop("Send Raw Transaction Process [SendRawTx Web3 Service]");
+  console.log([
+    "Array Params: " + arrayParams,
+    "Method: " + method,
+    "Use For: " + useFor,
+  ]);
   try {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
@@ -66,9 +71,9 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
   }
 };
 
+// get all transaction with event TransactionAdded
 export const getAllTransactionInSmartContract = async (useFor, event) => {
   const contract = await createContractInstance(useFor);
-  const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
   const events = await contract.getPastEvents(event, {
     fromBlock: 0,
     toBlock: "latest",
@@ -78,15 +83,14 @@ export const getAllTransactionInSmartContract = async (useFor, event) => {
     const returnValues = event.returnValues;
     return {
       transaction: {
-        id: returnValues.transactionId.toString(),
         code: returnValues.transactionCode,
-        from: returnValues.from,
-        fromId: returnValues.fromId,
-        to: returnValues.to,
-        toId: returnValues.toId,
+        campaignId: returnValues.campaignId.toString(),
+        fromToUserId: returnValues.fromToUserId.toString(),
         orderType: returnValues.orderType,
         paymentStatus: returnValues.paymentStatus,
-        createdAt: returnValues.createdAt.toString(),
+        status: returnValues.status,
+        quantity: returnValues.quantity.toString(),
+        totalPrice: returnValues.totalPrice.toString(),
       },
       blockNumber: event.blockNumber.toString(),
       transactionHash: event.transactionHash,
