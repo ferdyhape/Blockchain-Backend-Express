@@ -9,6 +9,7 @@ export const validateAddTransaction = [
   body("status").isString(),
   body("quantity").isNumeric(),
   body("totalPrice").isNumeric(),
+  body("paymentMethodDetailId").isString(),
   body("createdAt").isNumeric(),
 ];
 
@@ -20,4 +21,9 @@ export const validateUpdateTransactionStatus = [
 export const validateUpdateTransactionPaymentStatus = [
   body("transactionCode").isString(),
   body("paymentStatus").isString(),
+];
+
+export const validateUploadTransactionPaymentProof = [
+  body("transactionCode").isString(),
+  body("paymentProof").isString(),
 ];

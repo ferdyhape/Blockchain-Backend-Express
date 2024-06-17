@@ -1,23 +1,40 @@
 import { createContractInstance, sendRawTx } from "../services/web3Service.js";
 import { consoleForDevelop } from "../config/app.js";
 
+// Helper function to map transaction data
+const mapTransaction = (transaction) => {
+  return {
+    transactionCode: transaction[0].toString(),
+    campaignId: transaction[1].toString(),
+    fromToUserId: transaction[2].toString(),
+    orderType: transaction[3],
+    paymentStatus: transaction[4],
+    status: transaction[5],
+    quantity: transaction[6].toString(),
+    totalPrice: transaction[7].toString(),
+    paymentMethodDetailId: transaction[8].toString(),
+    paymentProof: transaction[9],
+    createdAt: transaction[10].toString(),
+  };
+};
+
+// GET
 export const getAllTransaction = async () => {
   consoleForDevelop("Get Transactions Process [Transaction Service]");
   const contract = await createContractInstance("transaction");
   const transactions = await contract.methods.getAllTransactions().call();
-  const mappedTransactions = transactions.map((transaction) => {
-    return {
-      transactionCode: transaction[0].toString(),
-      campaignId: transaction[1].toString(),
-      fromToUserId: transaction[2].toString(),
-      orderType: transaction[3],
-      paymentStatus: transaction[4],
-      status: transaction[5],
-      quantity: transaction[6].toString(),
-      totalPrice: transaction[7].toString(),
-      createdAt: transaction[8].toString(),
-    };
-  });
+  const mappedTransactions = transactions.map(mapTransaction);
+  consoleForDevelop("Transactions fetched successfully", "footer");
+  return mappedTransactions;
+};
+
+export const getTransactionByCampaignId = async (campaignId) => {
+  consoleForDevelop("Get Transaction by CampaignId Process [Service]");
+  const contract = await createContractInstance("transaction");
+  const transactions = await contract.methods
+    .getTransactionByCampaignId(campaignId)
+    .call();
+  const mappedTransactions = transactions.map(mapTransaction);
   consoleForDevelop("Transactions fetched successfully", "footer");
   return mappedTransactions;
 };
@@ -29,17 +46,7 @@ export const getTranasctionByCode = async (transactionCode) => {
     .getTransactionByCode(transactionCode)
     .call();
   consoleForDevelop("Transaction fetched successfully", "footer");
-  return {
-    transactionCode: transaction[0].toString(),
-    campaignId: transaction[1].toString(),
-    fromToUserId: transaction[2].toString(),
-    orderType: transaction[3],
-    paymentStatus: transaction[4],
-    status: transaction[5],
-    quantity: transaction[6].toString(),
-    totalPrice: transaction[7].toString(),
-    createdAt: transaction[8].toString(),
-  };
+  return mapTransaction(transaction);
 };
 
 export const getTransactionByFromToUserId = async (fromToUserId) => {
@@ -48,23 +55,12 @@ export const getTransactionByFromToUserId = async (fromToUserId) => {
   const transactions = await contract.methods
     .getTransactionByFromToUserId(fromToUserId)
     .call();
-  const mappedTransactions = transactions.map((transaction) => {
-    return {
-      transactionCode: transaction[0].toString(),
-      campaignId: transaction[1].toString(),
-      fromToUserId: transaction[2].toString(),
-      orderType: transaction[3],
-      paymentStatus: transaction[4],
-      status: transaction[5],
-      quantity: transaction[6].toString(),
-      totalPrice: transaction[7].toString(),
-      createdAt: transaction[8].toString(),
-    };
-  });
+  const mappedTransactions = transactions.map(mapTransaction);
   consoleForDevelop("Transactions fetched successfully", "footer");
   return mappedTransactions;
 };
 
+// POST
 export const addTransaction = async (req) => {
   consoleForDevelop("Add Transaction Process [Service]");
   const {
@@ -76,6 +72,7 @@ export const addTransaction = async (req) => {
     status,
     quantity,
     totalPrice,
+    paymentMethodDetailId,
     createdAt,
   } = req;
   let arrayParams = [
@@ -87,15 +84,16 @@ export const addTransaction = async (req) => {
     status,
     quantity,
     totalPrice,
+    paymentMethodDetailId,
     createdAt,
   ];
-  console.log(arrayParams);
   var response = await sendRawTx(arrayParams, "addTransaction", "transaction");
   if (response.transactionHash) {
     consoleForDevelop(
       [
         "Transaction added successfully",
         "Transaction Hash: " + response.transactionHash,
+        "Transaction: " + response,
       ],
       "footer"
     );
@@ -133,6 +131,27 @@ export const updateTransactionPaymentStatus = async (req) => {
     consoleForDevelop(
       [
         "Transaction payment status updated successfully",
+        "Transaction Hash: " + response.transactionHash,
+      ],
+      "footer"
+    );
+    return response.transactionHash;
+  }
+};
+
+export const updateTransactionPaymentProof = async (req) => {
+  consoleForDevelop("Upload Payment Proof Process [Service]");
+  const { transactionCode, paymentProof } = req;
+  let arrayParams = [transactionCode, paymentProof];
+  var response = await sendRawTx(
+    arrayParams,
+    "updatePaymentProof",
+    "transaction"
+  );
+  if (response.transactionHash) {
+    consoleForDevelop(
+      [
+        "Payment proof uploaded successfully",
         "Transaction Hash: " + response.transactionHash,
       ],
       "footer"

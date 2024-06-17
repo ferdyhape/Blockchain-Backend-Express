@@ -3,62 +3,28 @@ dotenv.config();
 
 export const ABI_TRANSACTION = [
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_transactionCode",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_campaignId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_fromToUserId",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_orderType",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_paymentStatus",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_status",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_quantity",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_totalPrice",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_createdAt",
-        type: "uint256",
-      },
-    ],
-    name: "addTransaction",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "transactionCode",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "newPaymentProof",
+        type: "string",
+      },
+    ],
+    name: "PaymentProofUpdated",
+    type: "event",
   },
   {
     anonymous: false,
@@ -109,15 +75,15 @@ export const ABI_TRANSACTION = [
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "string",
         name: "campaignId",
-        type: "uint256",
+        type: "string",
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "string",
         name: "fromToUserId",
-        type: "uint256",
+        type: "string",
       },
       {
         indexed: false,
@@ -151,6 +117,18 @@ export const ABI_TRANSACTION = [
       },
       {
         indexed: false,
+        internalType: "string",
+        name: "paymentMethodDetailId",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "paymentProof",
+        type: "string",
+      },
+      {
+        indexed: false,
         internalType: "uint256",
         name: "createdAt",
         type: "uint256",
@@ -168,29 +146,51 @@ export const ABI_TRANSACTION = [
       },
       {
         internalType: "string",
-        name: "_newPaymentStatus",
-        type: "string",
-      },
-    ],
-    name: "updatePaymentStatus",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_transactionCode",
+        name: "_campaignId",
         type: "string",
       },
       {
         internalType: "string",
-        name: "_newStatus",
+        name: "_fromToUserId",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "_orderType",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_paymentStatus",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_status",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_totalPrice",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_paymentMethodDetailId",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_createdAt",
+        type: "uint256",
+      },
     ],
-    name: "updateStatus",
+    name: "addTransaction",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -207,14 +207,14 @@ export const ABI_TRANSACTION = [
             type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "campaignId",
-            type: "uint256",
+            type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "fromToUserId",
-            type: "uint256",
+            type: "string",
           },
           {
             internalType: "string",
@@ -240,6 +240,92 @@ export const ABI_TRANSACTION = [
             internalType: "uint256",
             name: "totalPrice",
             type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "paymentMethodDetailId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "paymentProof",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "createdAt",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct TransactionContract.Transaction[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_campaignId",
+        type: "string",
+      },
+    ],
+    name: "getTransactionByCampaignId",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "transactionCode",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "campaignId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "fromToUserId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "orderType",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "paymentStatus",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "status",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "quantity",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalPrice",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "paymentMethodDetailId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "paymentProof",
+            type: "string",
           },
           {
             internalType: "uint256",
@@ -273,14 +359,14 @@ export const ABI_TRANSACTION = [
             type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "campaignId",
-            type: "uint256",
+            type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "fromToUserId",
-            type: "uint256",
+            type: "string",
           },
           {
             internalType: "string",
@@ -306,6 +392,16 @@ export const ABI_TRANSACTION = [
             internalType: "uint256",
             name: "totalPrice",
             type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "paymentMethodDetailId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "paymentProof",
+            type: "string",
           },
           {
             internalType: "uint256",
@@ -324,9 +420,9 @@ export const ABI_TRANSACTION = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "_fromToUserId",
-        type: "uint256",
+        type: "string",
       },
     ],
     name: "getTransactionByFromToUserId",
@@ -339,14 +435,14 @@ export const ABI_TRANSACTION = [
             type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "campaignId",
-            type: "uint256",
+            type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "string",
             name: "fromToUserId",
-            type: "uint256",
+            type: "string",
           },
           {
             internalType: "string",
@@ -372,6 +468,16 @@ export const ABI_TRANSACTION = [
             internalType: "uint256",
             name: "totalPrice",
             type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "paymentMethodDetailId",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "paymentProof",
+            type: "string",
           },
           {
             internalType: "uint256",
@@ -422,14 +528,14 @@ export const ABI_TRANSACTION = [
         type: "string",
       },
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "campaignId",
-        type: "uint256",
+        type: "string",
       },
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "fromToUserId",
-        type: "uint256",
+        type: "string",
       },
       {
         internalType: "string",
@@ -457,12 +563,76 @@ export const ABI_TRANSACTION = [
         type: "uint256",
       },
       {
+        internalType: "string",
+        name: "paymentMethodDetailId",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "paymentProof",
+        type: "string",
+      },
+      {
         internalType: "uint256",
         name: "createdAt",
         type: "uint256",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_transactionCode",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_newPaymentProof",
+        type: "string",
+      },
+    ],
+    name: "updatePaymentProof",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_transactionCode",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_newPaymentStatus",
+        type: "string",
+      },
+    ],
+    name: "updatePaymentStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_transactionCode",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_newStatus",
+        type: "string",
+      },
+    ],
+    name: "updateStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

@@ -1,31 +1,66 @@
+import { validationResult } from "express-validator";
+
+// service
 import {
   getAllTransaction as getAllTransactionService,
   getTranasctionByCode as getTranasctionByCodeService,
   getTransactionByFromToUserId as getTransactionByFromToUserIdService,
+  getTransactionByCampaignId as getTransactionByCampaignIdService,
 } from "../services/transactionService.js";
-import { validationResult } from "express-validator";
+
+// request validation
 import {
   validateAddTransaction,
   validateUpdateTransactionStatus,
   validateUpdateTransactionPaymentStatus,
+  validateUploadTransactionPaymentProof,
 } from "../requests/transactionRequest.js";
+
+// queue
 import {
   addTransactionToQueue,
   updateTransactionStatusToQueue,
   updateTransactionPaymentStatusToQueue,
+  updateTransactionProofToQueue,
 } from "../queue/transactionQueue.js";
 import { consoleForDevelop } from "../config/app.js";
 
+// GET
 export const getTransactions = async (req, res) => {
   consoleForDevelop("Get Transactions Process [Controller]", "header");
   try {
     const transactions = await getAllTransactionService();
+    if (transactions.length === 0) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
     return res.status(200).json({
       message: "Transactions fetched successfully",
       data: transactions,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getTransactionByCampaignId = async (req, res) => {
+  consoleForDevelop(
+    "Get Transaction by CampaignId Process [Controller]",
+    "header"
+  );
+  try {
+    const transactions = await getTransactionByCampaignIdService(
+      req.params.campaignId
+    );
+    if (transactions.length === 0) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+    return res.status(200).json({
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching transaction by campaignId:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -71,6 +106,7 @@ export const getTransactionByFromToUserId = async (req, res) => {
   }
 };
 
+// POST
 export const addTransaction = async (req, res) => {
   consoleForDevelop("Add Transaction Process [Controller]", "header");
   try {
@@ -138,6 +174,30 @@ export const updateTransactionPaymentStatus = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating transaction payment status:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const uploadTransactionPaymentProof = async (req, res) => {
+  consoleForDevelop("Upload Payment Proof Process [Controller]", "header");
+  try {
+    consoleForDevelop("Validating transaction data [Controller]");
+    Promise.all(
+      validateUploadTransactionPaymentProof.map((validator) =>
+        validator.run(req)
+      )
+    ).then(() => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      updateTransactionProofToQueue(req.body);
+      return res.status(200).json({
+        message: "Transaction payment proof upload in progress...",
+      });
+    });
+  } catch (error) {
+    console.error("Error uploading payment proof:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
