@@ -6,6 +6,7 @@ import {
   getTranasctionByCode as getTranasctionByCodeService,
   getTransactionByFromToUserId as getTransactionByFromToUserIdService,
   getTransactionByCampaignId as getTransactionByCampaignIdService,
+  getCountTransaction as getCountTransactionService,
 } from "../services/transactionService.js";
 
 // request validation
@@ -102,6 +103,20 @@ export const getTransactionByFromToUserId = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching transaction by fromToUserId:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getCountTransaction = async (req, res) => {
+  consoleForDevelop("Get Count Transaction Process [Controller]", "header");
+  try {
+    const count = await getCountTransactionService();
+    return res.status(200).json({
+      message: "Transaction count fetched successfully",
+      data: count,
+    });
+  } catch (error) {
+    console.error("Error fetching transaction count:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

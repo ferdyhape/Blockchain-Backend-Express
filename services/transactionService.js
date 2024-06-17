@@ -60,6 +60,14 @@ export const getTransactionByFromToUserId = async (fromToUserId) => {
   return mappedTransactions;
 };
 
+export const getCountTransaction = async () => {
+  consoleForDevelop("Get Count Transaction Process [Service]");
+  const contract = await createContractInstance("transaction");
+  const count = await contract.methods.getCountTransaction().call();
+  consoleForDevelop("Transaction count fetched successfully", "footer");
+  return count.toString();
+};
+
 // POST
 export const addTransaction = async (req) => {
   consoleForDevelop("Add Transaction Process [Service]");

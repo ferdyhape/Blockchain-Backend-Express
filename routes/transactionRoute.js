@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getTransactions,
+  getCountTransaction,
   addTransaction,
   getTransactionByCode,
   getTransactionByCampaignId,
@@ -20,6 +21,7 @@ router.get("/", getTransactions);
 router.get("/code/:transactionCode", getTransactionByCode);
 router.get("/fromToUserId/:fromToUserId", getTransactionByFromToUserId);
 router.get("/campaignId/:campaignId", getTransactionByCampaignId);
+router.get("/count", getCountTransaction);
 
 router.post("/", addTransaction);
 router.post("/update-status", updateTransactionStatus);
