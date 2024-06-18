@@ -31,11 +31,6 @@ export const createContractInstance = async (useFor) => {
 
 export const sendRawTx = async (arrayParams, method, useFor) => {
   consoleForDevelop("Send Raw Transaction Process [SendRawTx Web3 Service]");
-  // console.log([
-  //   "Array Params: " + arrayParams,
-  //   "Method: " + method,
-  //   "Use For: " + useFor,
-  // ]);
   try {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);

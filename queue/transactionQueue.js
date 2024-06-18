@@ -6,63 +6,71 @@ import {
   updateTransactionPaymentProof,
 } from "../services/transactionService.js";
 import dotenv from "dotenv";
-// import { Redis } from "@upstash/redis";
 import { consoleForDevelop } from "../config/app.js";
 
 dotenv.config();
 
-// using local Redis
 const transactionQueue = new Queue("transactions");
 const transactionStatusQueue = new Queue("transactionStatus");
 const transactionPaymentStatusQueue = new Queue("transactionPaymentStatus");
 const transactionProofQueue = new Queue("transactionProof");
 
-// Define the process handler to handle incoming jobs
-
-// add transaction
-transactionQueue.process(async (job) => {
+transactionQueue.process(5, async (job) => {
   const { data } = job;
   await addTransaction(data);
 });
 
-// update transaction status
-transactionStatusQueue.process(async (job) => {
+transactionStatusQueue.process(5, async (job) => {
   const { data } = job;
   await updateTransactionStatus(data);
 });
 
-// update transaction payment status
-transactionPaymentStatusQueue.process(async (job) => {
+transactionPaymentStatusQueue.process(5, async (job) => {
   const { data } = job;
   await updateTransactionPaymentStatus(data);
 });
 
-// update transaction payment proof
-transactionProofQueue.process(async (job) => {
+transactionProofQueue.process(5, async (job) => {
   const { data } = job;
   await updateTransactionPaymentProof(data);
 });
 
-// Add transaction to queue
+transactionQueue.on("failed", (job, err) => {
+  console.error(`Job failed with error ${err.message}`);
+});
+
+transactionStatusQueue.on("failed", (job, err) => {
+  console.error(`Job failed with error ${err.message}`);
+});
+
+transactionPaymentStatusQueue.on("failed", (job, err) => {
+  console.error(`Job failed with error ${err.message}`);
+});
+
+transactionProofQueue.on("failed", (job, err) => {
+  console.error(`Job failed with error ${err.message}`);
+});
+
 export const addTransactionToQueue = (data) => {
   consoleForDevelop("Add Transaction Process [Queue]");
-  transactionQueue.add(data);
+  transactionQueue.add(data, { attempts: 3, backoff: 5000, priority: 1 });
 };
 
-// Update transaction status to queue
 export const updateTransactionStatusToQueue = (data) => {
-  consoleForDevelop("Update Tranasction Status Process [Queue]");
-  transactionStatusQueue.add(data);
+  consoleForDevelop("Update Transaction Status Process [Queue]");
+  transactionStatusQueue.add(data, { attempts: 3, backoff: 5000, priority: 1 });
 };
 
-// Update transaction payment status to queue
 export const updateTransactionPaymentStatusToQueue = (data) => {
-  consoleForDevelop("Update Tranasction Payment Status Process [Queue]");
-  transactionPaymentStatusQueue.add(data);
+  consoleForDevelop("Update Transaction Payment Status Process [Queue]");
+  transactionPaymentStatusQueue.add(data, {
+    attempts: 3,
+    backoff: 5000,
+    priority: 1,
+  });
 };
 
-// Update transaction payment proof to queue
 export const updateTransactionProofToQueue = (data) => {
   consoleForDevelop("Upload Payment Proof Process [Queue]");
-  transactionProofQueue.add(data);
+  transactionProofQueue.add(data, { attempts: 3, backoff: 5000, priority: 1 });
 };
