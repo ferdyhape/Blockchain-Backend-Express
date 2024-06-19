@@ -8,7 +8,9 @@ export const consoleForDevelop = (stringText, isHeaderOrFooter = null) => {
       console.log(
         "==========================================================="
       );
-      console.log("Console For Developing Process");
+      console.log(
+        "Console For Developing Process (" + new Date().toLocaleString() + ")"
+      );
       console.log(
         "==========================================================="
       );

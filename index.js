@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 app.use("/test", TestRoute);
 
 app.listen(process.env.APP_PORT, () => {
-  console.log(`Server is running on port ${process.env.APP_PORT}`);
+  console.log(`SERVER IS RUNNING IN PORT ${process.env.APP_PORT}`);
   console.log(
     `Open http://localhost:${process.env.APP_PORT} to see the result`
   );
