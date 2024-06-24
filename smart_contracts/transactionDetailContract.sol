@@ -1,114 +1,70 @@
-//SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
 contract TransactionDetailContract {
     struct TransactionDetail {
         string transactionCode;
-        string productName;
-        string productDescription;
-        string tokenOfProduct;
-        string productId;
-        string price;
+        uint256 price;
+        string token;
         uint createdAt;
     }
 
+    // Mapping to store transaction details
+    mapping(string => TransactionDetail[]) private transactionDetails;
+
     event TransactionDetailAdded(
         string transactionCode,
-        string productName,
-        string productDescription,
-        string tokenOfProduct,
-        string productId,
-        string price,
+        uint256 price,
+        string token,
         uint createdAt
     );
 
-    mapping(uint => TransactionDetail) public transactionDetails;
-    uint public transactionDetailCount;
-
+    // Function to add transaction detail
     function addTransactionDetail(
-        string[] memory _transactionCode,
-        string[] memory _productName,
-        string[] memory _productDescription,
-        string[] memory _tokenOfProduct,
-        string[] memory _productId,
-        string[] memory _price,
-        uint[] memory _createdAt
+        string memory _transactionCode,
+        uint256 _price,
+        string memory _token,
+        uint _createdAt
     ) public {
-        require(
-            _transactionCode.length == _productName.length &&
-                _productName.length == _productDescription.length &&
-                _productDescription.length == _tokenOfProduct.length &&
-                _tokenOfProduct.length == _productId.length &&
-                _productId.length == _price.length &&
-                _price.length == _createdAt.length,
-            "Lengths of input arrays do not match"
+        transactionDetails[_transactionCode].push(
+            TransactionDetail({
+                transactionCode: _transactionCode,
+                price: _price,
+                token: _token,
+                createdAt: _createdAt
+            })
         );
 
-        for (uint i = 0; i < _transactionCode.length; i++) {
-            transactionDetailCount++;
-            transactionDetails[transactionDetailCount] = TransactionDetail(
-                _transactionCode[i],
-                _productName[i],
-                _productDescription[i],
-                _tokenOfProduct[i],
-                _productId[i],
-                _price[i],
-                _createdAt[i]
-            );
-
-            emit TransactionDetailAdded(
-                _transactionCode[i],
-                _productName[i],
-                _productDescription[i],
-                _tokenOfProduct[i],
-                _productId[i],
-                _price[i],
-                _createdAt[i]
-            );
-        }
-    }
-
-    function getAllTransactionDetail()
-        public
-        view
-        returns (TransactionDetail[] memory)
-    {
-        TransactionDetail[] memory result = new TransactionDetail[](
-            transactionDetailCount
+        emit TransactionDetailAdded(
+            _transactionCode,
+            _price,
+            _token,
+            _createdAt
         );
-        for (uint i = 1; i <= transactionDetailCount; i++) {
-            result[i - 1] = transactionDetails[i];
-        }
-        return result;
     }
 
+    // Function to get count of transaction details by transaction code
+    function getCountTransactionDetailByTransactionCode(
+        string memory _transactionCode
+    ) public view returns (uint) {
+        return transactionDetails[_transactionCode].length;
+    }
+
+    // Function to get all transaction details by transaction code
     function getTransactionDetailByTransactionCode(
         string memory _transactionCode
     ) public view returns (TransactionDetail[] memory) {
-        uint count = 0;
-        for (uint i = 1; i <= transactionDetailCount; i++) {
-            if (
-                keccak256(
-                    abi.encodePacked(transactionDetails[i].transactionCode)
-                ) == keccak256(abi.encodePacked(_transactionCode))
-            ) {
-                count++;
-            }
-        }
+        return transactionDetails[_transactionCode];
+    }
 
-        TransactionDetail[] memory result = new TransactionDetail[](count);
-        uint index = 0;
-        for (uint i = 1; i <= transactionDetailCount; i++) {
-            if (
-                keccak256(
-                    abi.encodePacked(transactionDetails[i].transactionCode)
-                ) == keccak256(abi.encodePacked(_transactionCode))
-            ) {
-                result[index] = transactionDetails[i];
-                index++;
-            }
-        }
-        return result;
+    // Function to get price from transaction detail by transaction code
+    function getPriceFromTransactionDetailByTransactionCode(
+        string memory _transactionCode
+    ) public view returns (uint256) {
+        require(
+            transactionDetails[_transactionCode].length > 0,
+            "Transaction code not found"
+        );
+        return transactionDetails[_transactionCode][0].price;
     }
 }
