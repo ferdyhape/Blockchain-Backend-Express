@@ -1,158 +1,213 @@
-//SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
 contract TransactionContract {
     struct Transaction {
-        uint transactionId; // unique transaction id
-        string transactionCode; // unique transaction code
-        string from; // buyer or seller name
-        string fromId; // buyer or seller id
-        string to; // seller or buyer name
-        string toId; // buyer or seller id
-        string orderType; // buy or sell
-        string paymentStatus; // pending, paid, failed
+        string transactionCode;
+        string campaignId;
+        string fromToUserId;
+        string orderType;
+        string paymentStatus;
+        string status;
+        uint quantity;
+        uint256 totalPrice;
+        string paymentMethodDetailId;
+        string paymentProof; // Added paymentProof attribute
         uint createdAt;
     }
 
+    mapping(string => Transaction) public transactions; // Deklarasi mapping
+    string[] public transactionCodes; // Array untuk menyimpan kode transaksi
+
     event TransactionAdded(
-        uint indexed transactionId,
         string transactionCode,
-        string from,
-        string fromId,
-        string to,
-        string toId,
+        string campaignId,
+        string fromToUserId,
         string orderType,
         string paymentStatus,
+        string status,
+        uint quantity,
+        uint256 totalPrice,
+        string paymentMethodDetailId,
+        string paymentProof, // Added paymentProof attribute to event
         uint createdAt
     );
 
-    event PaymentStatusUpdated(
-        uint indexed transactionId,
-        string paymentStatus,
-        uint updatedAt
-    );
+    event StatusUpdated(string transactionCode, string newStatus);
+    event PaymentStatusUpdated(string transactionCode, string newPaymentStatus);
+    event PaymentProofUpdated(string transactionCode, string newPaymentProof);
 
-    mapping(uint => Transaction) public transactions;
-    uint public transactionCount;
+    constructor() {
+        // Buat konstruktor
+    }
 
     function addTransaction(
         string memory _transactionCode,
-        string memory _from,
-        string memory _fromId,
-        string memory _to,
-        string memory _toId,
+        string memory _campaignId,
+        string memory _fromToUserId,
         string memory _orderType,
         string memory _paymentStatus,
+        string memory _status,
+        uint _quantity,
+        uint256 _totalPrice,
+        string memory _paymentMethodDetailId,
         uint _createdAt
     ) public {
-        transactionCount++;
-        transactions[transactionCount] = Transaction(
-            transactionCount,
+        transactions[_transactionCode] = Transaction(
             _transactionCode,
-            _from,
-            _fromId,
-            _to,
-            _toId,
+            _campaignId,
+            _fromToUserId,
             _orderType,
             _paymentStatus,
+            _status,
+            _quantity,
+            _totalPrice,
+            _paymentMethodDetailId,
+            "null",
             _createdAt
         );
 
+        transactionCodes.push(_transactionCode); // Tambahkan kode transaksi ke dalam array
+
         emit TransactionAdded(
-            transactionCount,
             _transactionCode,
-            _from,
-            _fromId,
-            _to,
-            _toId,
+            _campaignId,
+            _fromToUserId,
             _orderType,
             _paymentStatus,
+            _status,
+            _quantity,
+            _totalPrice,
+            _paymentMethodDetailId,
+            "null",
             _createdAt
         );
     }
 
-    function getTransaction(
-        uint _transactionId
-    ) public view returns (Transaction memory) {
-        return transactions[_transactionId];
+    function getAllTransactions() public view returns (Transaction[] memory) {
+        Transaction[] memory allTransactions = new Transaction[](
+            transactionCodes.length
+        );
+        for (uint i = 0; i < transactionCodes.length; i++) {
+            allTransactions[i] = transactions[transactionCodes[i]];
+        }
+        return allTransactions;
+    }
+
+    function updateStatus(
+        string memory _transactionCode,
+        string memory _newStatus
+    ) public {
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
+        );
+        transactions[_transactionCode].status = _newStatus;
+        emit StatusUpdated(_transactionCode, _newStatus);
     }
 
     function updatePaymentStatus(
-        uint _transactionId,
-        string memory _paymentStatus,
-        uint _updatedAt
+        string memory _transactionCode,
+        string memory _newPaymentStatus
     ) public {
         require(
-            _transactionId <= transactionCount,
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
             "Transaction does not exist"
         );
-
-        Transaction storage transaction = transactions[_transactionId];
-        transaction.paymentStatus = _paymentStatus;
-
-        emit PaymentStatusUpdated(_transactionId, _paymentStatus, _updatedAt);
+        transactions[_transactionCode].paymentStatus = _newPaymentStatus;
+        emit PaymentStatusUpdated(_transactionCode, _newPaymentStatus);
     }
 
-    function getAllTransaction() public view returns (Transaction[] memory) {
-        Transaction[] memory _transactions = new Transaction[](
-            transactionCount
+    function updatePaymentProof(
+        string memory _transactionCode,
+        string memory _newPaymentProof
+    ) public {
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
         );
-        for (uint i = 1; i <= transactionCount; i++) {
-            _transactions[i - 1] = transactions[i];
-        }
-        return _transactions;
+        transactions[_transactionCode].paymentProof = _newPaymentProof;
+        transactions[_transactionCode].paymentStatus = "paid"; // Update payment status to "paid"
+        emit PaymentProofUpdated(_transactionCode, _newPaymentProof);
+        emit PaymentStatusUpdated(_transactionCode, "paid");
     }
 
-    function getTransactionByBuyerId(
-        string memory _buyerId
+    function getTransactionByFromToUserId(
+        string memory _fromToUserId
     ) public view returns (Transaction[] memory) {
         uint count = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].fromId)) ==
-                keccak256(abi.encodePacked(_buyerId))
+                keccak256(
+                    abi.encodePacked(
+                        transactions[transactionCodes[i]].fromToUserId
+                    )
+                ) == keccak256(abi.encodePacked(_fromToUserId))
             ) {
                 count++;
             }
         }
-        Transaction[] memory _transactions = new Transaction[](count);
-        uint j = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        Transaction[] memory result = new Transaction[](count);
+        uint index = 0;
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].fromId)) ==
-                keccak256(abi.encodePacked(_buyerId))
+                keccak256(
+                    abi.encodePacked(
+                        transactions[transactionCodes[i]].fromToUserId
+                    )
+                ) == keccak256(abi.encodePacked(_fromToUserId))
             ) {
-                _transactions[j] = transactions[i];
-                j++;
+                result[index] = transactions[transactionCodes[i]];
+                index++;
             }
         }
-        return _transactions;
+        return result;
     }
 
-    function getTransactionBySellerId(
-        string memory _sellerId
+    function getTransactionByCode(
+        string memory _transactionCode
+    ) public view returns (Transaction memory) {
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
+        );
+        return transactions[_transactionCode];
+    }
+
+    function getTransactionByCampaignId(
+        string memory _campaignId
     ) public view returns (Transaction[] memory) {
         uint count = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].toId)) ==
-                keccak256(abi.encodePacked(_sellerId))
+                keccak256(
+                    abi.encodePacked(
+                        transactions[transactionCodes[i]].campaignId
+                    )
+                ) == keccak256(abi.encodePacked(_campaignId))
             ) {
                 count++;
             }
         }
-        Transaction[] memory _transactions = new Transaction[](count);
-        uint j = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        Transaction[] memory result = new Transaction[](count);
+        uint index = 0;
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].toId)) ==
-                keccak256(abi.encodePacked(_sellerId))
+                keccak256(
+                    abi.encodePacked(
+                        transactions[transactionCodes[i]].campaignId
+                    )
+                ) == keccak256(abi.encodePacked(_campaignId))
             ) {
-                _transactions[j] = transactions[i];
-                j++;
+                result[index] = transactions[transactionCodes[i]];
+                index++;
             }
         }
-        return _transactions;
+        return result;
+    }
+
+    // Function to get the count of transactions
+    function getCountTransaction() public view returns (uint) {
+        return transactionCodes.length;
     }
 }
