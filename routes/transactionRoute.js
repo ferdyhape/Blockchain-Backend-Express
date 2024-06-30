@@ -10,12 +10,11 @@ import {
   updateTransactionPaymentStatus,
   uploadTransactionPaymentProof,
 } from "../controllers/transactionController.js";
-// import { validateTokenMiddleware } from "../config/app.js";
-import validateTokenMiddleware from "../middleware/validateToken.js";
+import { validateTokenGeneral } from "../middleware/validateToken.js";
 
 const router = express.Router();
 
-router.use(validateTokenMiddleware);
+router.use(validateTokenGeneral);
 
 router.get("/", getTransactions);
 router.get("/code/:transactionCode", getTransactionByCode);

@@ -1,35 +1,8 @@
-GET http://localhost:5000/api/transactions
+### DEPLOY TRANSACTION CONTRACT
+GET http://localhost:5000/web3/deploy/transaction
+Authorization: U2FsdGVkX1+3
 
-###
-POST http://localhost:5000/api/transactions
-Content-Type: application/json
-
-{
-    "transactionCode": "x-tes255",
-    "buyer": "ferdy",
-    "buyerId": "98173",
-    "sellerCompany": "PT Angkuh Jaya",
-    "sellerId": "123132",
-    "sumOfProduct": "2",
-    "totalPrice": "100000000",
-    "paymentStatus": "pending",
-    "createdAt": "9123713"
-}
-
-
-###
-GET http://localhost:5000/api/transaction-details
-
-###
-POST http://localhost:5000/api/transaction-details
-Content-Type: application/json
-
-{
-    "transactionCode": "x-tes1",
-    "productName": "laptop",
-    "productDescription": "laptop as new",
-    "tokenOfProduct": "123123",
-    "price": "50000000",
-    "createdAt": 9123713
-}
+### DEPLOY TRANSACTION DETAIL CONTRACT
+GET http://localhost:5000/web3/deploy/transaction-detail
+Authorization: U2FsdGVkX1+3
 

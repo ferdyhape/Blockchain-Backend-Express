@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import TransactionRoute from "./routes/transactionRoute.js";
 import TransactionDetailRoute from "./routes/transactionDetailRoute.js";
+import Web3Route from "./routes/web3Route.js";
+import { compileContracts } from "./services/web3Service.js";
 
 // import for testing route
 import TestRoute from "./routes/testRoute.js";
@@ -12,12 +14,16 @@ dotenv.config();
 
 const app = express();
 
+// Compile smart contract
+compileContracts();
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/transactions", TransactionRoute);
 app.use("/api/transaction-details", TransactionDetailRoute);
+app.use("/web3", Web3Route);
 
 // route for testing
 app.get("/", (req, res) => {
