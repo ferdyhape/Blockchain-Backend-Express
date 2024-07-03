@@ -7,10 +7,16 @@ import chalk from "chalk";
 import {
   CONTRACT_ADDRESS_TRANSACTION,
   CONTRACT_ADDRESS_TRANSACTION_DETAIL,
+  CONTRACT_ADDRESS_TOKEN,
   PRIVATE_KEY,
   API_URL,
   WALLET_ADDRESS,
 } from "../config/smartContractConfig.js";
+import {
+  deployTransactionContract,
+  deployTransactionDetailContract,
+  deployTokenContract,
+} from "../controllers/web3Controller.js";
 import { consoleForDevelop } from "../config/app.js";
 
 const web3 = new Web3(API_URL);
@@ -24,164 +30,112 @@ export const compileContracts = async () => {
     const __dirname = path.resolve();
     const buildPath = path.resolve(__dirname, "smart_contracts", "build");
 
-    // Check if build folder exists
+    // Ensure build folder exists
     if (!fs.existsSync(buildPath)) {
       fs.mkdirSync(buildPath);
     }
 
-    // Compile transactionContract.sol if ABI and bytecode files do not exist
-    const transactionContractABIPath = path.resolve(
-      buildPath,
-      "TransactionContractABI.json"
-    );
-    const transactionContractBytecodePath = path.resolve(
-      buildPath,
-      "TransactionContractBytecode.txt"
-    );
+    // List of contracts to compile
+    const contracts = [
+      {
+        name: "TransactionContract",
+        filename: "TransactionContract.sol",
+        abiFileName: "TransactionContractABI.json",
+        bytecodeFileName: "TransactionContractBytecode.txt",
+        deployFunction: deployTransactionContract,
+      },
+      // {
+      //   name: "TransactionDetailContract",
+      //   filename: "TransactionDetailContract.sol",
+      //   abiFileName: "TransactionDetailContractABI.json",
+      //   bytecodeFileName: "TransactionDetailContractBytecode.txt",
+      //   deployFunction: deployTransactionDetailContract,
+      // },
+      {
+        name: "TokenContract",
+        filename: "TokenContract.sol",
+        abiFileName: "TokenContractABI.json",
+        bytecodeFileName: "TokenContractBytecode.txt",
+        deployFunction: deployTokenContract,
+      },
+      // Add more contracts as needed
+    ];
 
-    if (
-      !fs.existsSync(transactionContractABIPath) ||
-      !fs.existsSync(transactionContractBytecodePath)
-    ) {
-      const contractPath1 = path.resolve(
-        __dirname,
-        "smart_contracts",
-        "transactionContract.sol"
-      );
-      const source1 = fs.readFileSync(contractPath1, "utf8");
+    // Compile each contract
+    for (const contract of contracts) {
+      const abiPath = path.resolve(buildPath, contract.abiFileName);
+      const bytecodePath = path.resolve(buildPath, contract.bytecodeFileName);
 
-      const input1 = {
-        language: "Solidity",
-        sources: {
-          "transactionContract.sol": {
-            content: source1,
-          },
-        },
-        settings: {
-          outputSelection: {
-            "*": {
-              "*": ["abi", "evm.bytecode"],
+      if (!fs.existsSync(abiPath) || !fs.existsSync(bytecodePath)) {
+        const contractPath = path.resolve(
+          __dirname,
+          "smart_contracts",
+          contract.filename
+        );
+        const source = fs.readFileSync(contractPath, "utf8");
+
+        const input = {
+          language: "Solidity",
+          sources: {
+            [contract.filename]: {
+              content: source,
             },
           },
-        },
-      };
-
-      const output1 = JSON.parse(solc.compile(JSON.stringify(input1)));
-
-      // console.log(
-      //   "Compilation Output for transactionContract:",
-      //   JSON.stringify(output1, null, 2)
-      // );
-
-      if (output1.errors) {
-        output1.errors.forEach((err) => {
-          console.error(err.formattedMessage);
-        });
-        throw new Error("Compilation failed for transactionContract");
-      }
-
-      const contract1 =
-        output1.contracts["transactionContract.sol"].TransactionContract;
-
-      // Write ABI to file for transactionContract
-      fs.writeFileSync(
-        transactionContractABIPath,
-        JSON.stringify(contract1.abi, null, 2)
-      );
-
-      // Write bytecode to file for transactionContract
-      fs.writeFileSync(
-        transactionContractBytecodePath,
-        contract1.evm.bytecode.object
-      );
-
-      console.log(
-        chalk.green(
-          "ABI and bytecode for transactionContract successfully saved in the build folder inside smart_contracts."
-        )
-      );
-    } else {
-      console.log(
-        "TransactionContract ABI and bytecode files already exist. Skipping compilation."
-      );
-    }
-
-    // Compile transactionDetailContract.sol if ABI and bytecode files do not exist
-    const transactionDetailContractABIPath = path.resolve(
-      buildPath,
-      "TransactionDetailContractABI.json"
-    );
-    const transactionDetailContractBytecodePath = path.resolve(
-      buildPath,
-      "TransactionDetailContractBytecode.txt"
-    );
-
-    if (
-      !fs.existsSync(transactionDetailContractABIPath) ||
-      !fs.existsSync(transactionDetailContractBytecodePath)
-    ) {
-      const contractPath2 = path.resolve(
-        __dirname,
-        "smart_contracts",
-        "transactionDetailContract.sol"
-      );
-      const source2 = fs.readFileSync(contractPath2, "utf8");
-
-      const input2 = {
-        language: "Solidity",
-        sources: {
-          "transactionDetailContract.sol": {
-            content: source2,
-          },
-        },
-        settings: {
-          outputSelection: {
-            "*": {
-              "*": ["abi", "evm.bytecode"],
+          settings: {
+            outputSelection: {
+              "*": {
+                "*": ["abi", "evm.bytecode"],
+              },
             },
           },
-        },
-      };
+        };
 
-      const output2 = JSON.parse(solc.compile(JSON.stringify(input2)));
+        const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
-      // console.log(
-      //   "Compilation Output for transactionDetailContract:",
-      //   JSON.stringify(output2, null, 2)
-      // );
+        if (output.errors) {
+          output.errors.forEach((err) => {
+            console.error(err.formattedMessage);
+          });
+          throw new Error(`Compilation failed for ${contract.name}`);
+        }
 
-      if (output2.errors) {
-        output2.errors.forEach((err) => {
-          console.error(err.formattedMessage);
-        });
-        throw new Error("Compilation failed for transactionDetailContract");
+        const compiledContract =
+          output.contracts[contract.filename][contract.name];
+
+        // Write ABI to file
+        fs.writeFileSync(
+          abiPath,
+          JSON.stringify(compiledContract.abi, null, 2)
+        );
+
+        // Write bytecode to file
+        fs.writeFileSync(bytecodePath, compiledContract.evm.bytecode.object);
+
+        console.log(
+          chalk.green(
+            `ABI and bytecode for ${contract.name} successfully saved in the build folder inside smart_contracts.`
+          )
+        );
+
+        console.log(
+          chalk.green(`Deploying ${contract.name} smart contract...`)
+        );
+        try {
+          const response = await contract.deployFunction();
+          // console.log(`response deploy smart contract`, response);
+          console.log(
+            chalk.green(
+              `${contract.name} deployed successfully at address: ${response}`
+            )
+          );
+        } catch (deployError) {
+          console.error(`Error deploying ${contract.name}:`, deployError);
+        }
+      } else {
+        console.log(
+          `${contract.name} ABI and bytecode files already exist. Skipping compilation.`
+        );
       }
-
-      const contract2 =
-        output2.contracts["transactionDetailContract.sol"]
-          .TransactionDetailContract;
-
-      // Write ABI to file for transactionDetailContract
-      fs.writeFileSync(
-        transactionDetailContractABIPath,
-        JSON.stringify(contract2.abi, null, 2)
-      );
-
-      // Write bytecode to file for transactionDetailContract
-      fs.writeFileSync(
-        transactionDetailContractBytecodePath,
-        contract2.evm.bytecode.object
-      );
-
-      console.log(
-        chalk.green(
-          "ABI and bytecode for transactionDetailContract successfully saved in the build folder inside smart_contracts."
-        )
-      );
-    } else {
-      console.log(
-        "TransactionDetailContract ABI and bytecode files already exist. Skipping compilation."
-      );
     }
   } catch (error) {
     console.error("Error compiling contracts:", error);
@@ -201,9 +155,9 @@ const getBytecode = (contractName) => {
 };
 
 export const deploySmartContract = async (contractName) => {
-  consoleForDevelop(
-    `Deploy Smart Contract Process [Web3 Service] - ${contractName}`
-  );
+  // consoleForDevelop(
+  //   `Deploy Smart Contract Process [Web3 Service] - ${contractName}`
+  // );
   try {
     const bytecode = getBytecode(contractName);
 
@@ -229,6 +183,7 @@ const validateUseFor = (useFor) => {
   let abiPath;
   if (useFor === "transaction") {
     abiPath = path.resolve(buildPath, "TransactionContractABI.json");
+    // console.log(JSON.parse(fs.readFileSync(abiPath)));
     return [JSON.parse(fs.readFileSync(abiPath)), CONTRACT_ADDRESS_TRANSACTION];
   }
   if (useFor === "transactionDetail") {
@@ -237,6 +192,10 @@ const validateUseFor = (useFor) => {
       JSON.parse(fs.readFileSync(abiPath)),
       CONTRACT_ADDRESS_TRANSACTION_DETAIL,
     ];
+  }
+  if (useFor === "token") {
+    abiPath = path.resolve(buildPath, "TokenContractABI.json");
+    return [JSON.parse(fs.readFileSync(abiPath)), CONTRACT_ADDRESS_TOKEN];
   }
   throw new Error("Invalid useFor value");
 };
@@ -254,12 +213,18 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     const [abiUsed, contractAddressUsed] = validateUseFor(useFor);
     const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS);
     let gasPrice = await web3.eth.getGasPrice();
-    if (useFor === "transactionDetail") {
-      gasPrice = gasPrice.toString() * 2;
-    }
-    const gasLimit = 3000000;
+    // if (useFor === "transactionDetail") {
+    //   gasPrice = gasPrice.toString() * 2;
+    // }
+    // if (useFor === "token") {
+    //   gasPrice = gasPrice.toString() * 3;
+    // }
+    const gasLimit = 10000000;
     const contract = new web3.eth.Contract(abiUsed, contractAddressUsed);
     const data = contract.methods[method](...arrayParams).encodeABI();
+
+    // Set transactionPollingTimeout here (example: 60000 ms = 1 minute)
+    // web3.eth.transactionPollingTimeout = 60000;
 
     const rawTx = {
       nonce: web3.utils.toHex(nonce),

@@ -6,3 +6,6 @@ Authorization: U2FsdGVkX1+3
 GET http://localhost:5000/web3/deploy/transaction-detail
 Authorization: U2FsdGVkX1+3
 
+### DEPLOY TOKEN CONTRACT
+GET http://localhost:5000/web3/deploy/token
+Authorization: U2FsdGVkX1+3

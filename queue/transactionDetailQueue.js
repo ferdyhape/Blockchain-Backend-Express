@@ -13,14 +13,13 @@ TransactionDetailQueue.process(5, async (job) => {
 });
 
 TransactionDetailQueue.on("failed", (job, err) => {
-  console.error(`Job failed with error ${err.message}`);
+  // console.error(`Job failed with error ${err.message}`);
 });
 
 export const addTransactionDetailToQueue = (data) => {
   consoleForDevelop("Add Transaction Detail Process [Queue]");
   TransactionDetailQueue.add(data, {
-    attempts: 3,
+    attempts: 10,
     backoff: 5000,
-    priority: 10,
   });
 };
