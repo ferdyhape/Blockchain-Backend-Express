@@ -9,8 +9,8 @@ export const validateAddTransaction = [
   body("status").isString(),
   body("quantity").isNumeric(),
   body("totalPrice").isNumeric(),
-  body("paymentMethodDetailId").isString(),
-  body("createdAt").isNumeric(),
+  // body("paymentMethodDetailId").isString(),
+  body("createdAt").isString(),
 ];
 
 export const validateUpdateTransactionStatus = [

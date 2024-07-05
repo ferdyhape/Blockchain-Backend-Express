@@ -12,9 +12,9 @@ const mapTransaction = (transaction) => {
     status: transaction[5],
     quantity: transaction[6].toString(),
     totalPrice: transaction[7].toString(),
-    paymentMethodDetailId: transaction[8].toString(),
-    paymentProof: transaction[9],
-    createdAt: transaction[10].toString(),
+    // paymentMethodDetailId: transaction[8].toString(),
+    paymentProof: transaction[8],
+    createdAt: transaction[9],
   };
 };
 
@@ -80,7 +80,7 @@ export const addTransaction = async (req) => {
     status,
     quantity,
     totalPrice,
-    paymentMethodDetailId,
+    // paymentMethodDetailId,
     createdAt,
   } = req;
   let arrayParams = [
@@ -92,7 +92,7 @@ export const addTransaction = async (req) => {
     status,
     quantity,
     totalPrice,
-    paymentMethodDetailId,
+    // paymentMethodDetailId,
     createdAt,
   ];
   var response = await sendRawTx(arrayParams, "addTransaction", "transaction");

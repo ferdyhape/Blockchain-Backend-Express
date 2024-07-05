@@ -1,5 +1,8 @@
 node_modules
 # Keep environment variables out of version control
 .env
+.env.backup
 .vercel
 smart_contracts/build
+log_script/deploy.log
+log_script/npm_output.log
