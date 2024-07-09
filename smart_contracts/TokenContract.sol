@@ -287,4 +287,46 @@ contract TokenContract {
             }
         }
     }
+
+    // Function to delete tokens by campaignId
+    function deleteTokenByCampaignId(
+        string memory _campaignId
+    ) public returns (Token[] memory) {
+        uint deletedCount = 0;
+        uint i = 0;
+        uint count = 0;
+
+        // First pass to count the number of tokens to be deleted
+        for (uint j = 0; j < tokens.length; j++) {
+            if (
+                keccak256(abi.encodePacked(tokens[j].campaignId)) ==
+                keccak256(abi.encodePacked(_campaignId))
+            ) {
+                count++;
+            }
+        }
+
+        // Create an array to store deleted tokens
+        Token[] memory deletedTokens = new Token[](count);
+
+        // Second pass to delete the tokens and store them in the array
+        while (i < tokens.length) {
+            if (
+                keccak256(abi.encodePacked(tokens[i].campaignId)) ==
+                keccak256(abi.encodePacked(_campaignId))
+            ) {
+                deletedTokens[deletedCount] = tokens[i];
+                emit TokenDeleted(tokens[i].transactionCode); // Emit event before deletion
+                for (uint j = i; j < tokens.length - 1; j++) {
+                    tokens[j] = tokens[j + 1];
+                }
+                tokens.pop();
+                deletedCount++;
+            } else {
+                i++;
+            }
+        }
+
+        return deletedTokens;
+    }
 }

@@ -4,6 +4,7 @@ import {
   changeStatusByTransactionCode,
   deleteTokenByTransactionCode,
   deleteTokenByCampaignIdAndSoldTo,
+  deleteTokenByCampaignId,
 } from "../services/tokenService.js";
 import dotenv from "dotenv";
 import { consoleForDevelop } from "../config/app.js";
@@ -71,18 +72,40 @@ export const deleteTokenByTransactionCodeToQueue = (data) => {
 // deleteTokenByCampaignIdAndSoldTo;
 
 // make for deleteTokenByCampaignIdAndSoldTo
+const TokenDeleteByCampaignIdAndSoldToQueue = new Queue(
+  "tokenDeleteByCampaignIdAndSoldTo"
+);
+
+TokenDeleteByCampaignIdAndSoldToQueue.process(5, async (job) => {
+  const { data } = job;
+  await deleteTokenByCampaignIdAndSoldTo(data);
+});
+
+TokenDeleteByCampaignIdAndSoldToQueue.on("failed", (job, err) => {
+  console.error(`Job failed with error ${err.message}`);
+});
+
+export const deleteTokenByCampaignIdAndSoldToToQueue = (data) => {
+  consoleForDevelop("Delete Token By Campaign Id Process [Queue]");
+  TokenDeleteByCampaignIdAndSoldToQueue.add(data, {
+    attempts: 10,
+    backoff: 5000,
+  });
+};
+
+// make for deleteTokenByCampaignId
 const TokenDeleteByCampaignIdQueue = new Queue("tokenDeleteByCampaignId");
 
 TokenDeleteByCampaignIdQueue.process(5, async (job) => {
   const { data } = job;
-  await deleteTokenByCampaignIdAndSoldTo(data);
+  await deleteTokenByCampaignId(data);
 });
 
 TokenDeleteByCampaignIdQueue.on("failed", (job, err) => {
   console.error(`Job failed with error ${err.message}`);
 });
 
-export const deleteTokenByCampaignIdAndSoldToToQueue = (data) => {
+export const deleteTokenByCampaignIdToQueue = (data) => {
   consoleForDevelop("Delete Token By Campaign Id Process [Queue]");
   TokenDeleteByCampaignIdQueue.add(data, {
     attempts: 10,

@@ -13,12 +13,14 @@ import {
   validateChangeStatusByTransactionCode,
   validateDeleteTokenByTransactionCode,
   validatedeleteTokenByCampaignIdAndSoldTo,
+  validateDeleteTokenByCampaignId,
 } from "../requests/tokenRequest.js";
 import {
   addTokenToQueue,
   changeStatusByTransactionCodeToQueue,
   deleteTokenByTransactionCodeToQueue,
   deleteTokenByCampaignIdAndSoldToToQueue,
+  deleteTokenByCampaignIdToQueue,
 } from "../queue/tokenQueue.js";
 import { consoleForDevelop } from "../config/app.js";
 
@@ -116,6 +118,31 @@ export const deleteTokenByCampaignIdAndSoldTo = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
       }
       deleteTokenByCampaignIdAndSoldToToQueue(req.body);
+      return res.status(200).json({
+        message: "Token delete in progress...",
+      });
+    });
+  } catch (error) {
+    console.error("Error deleting token:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deleteTokenByCampaignId = async (req, res) => {
+  consoleForDevelop(
+    "Delete Token By Campaign ID Process [Controller]",
+    "header"
+  );
+  try {
+    consoleForDevelop("Validating token data [Controller]");
+    Promise.all(
+      validateDeleteTokenByCampaignId.map((validator) => validator.run(req))
+    ).then(() => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      deleteTokenByCampaignIdToQueue(req.body);
       return res.status(200).json({
         message: "Token delete in progress...",
       });

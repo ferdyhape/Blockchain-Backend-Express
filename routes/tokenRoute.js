@@ -5,6 +5,7 @@ import {
   changeStatusByTransactionCode,
   deleteTokenByTransactionCode,
   deleteTokenByCampaignIdAndSoldTo,
+  deleteTokenByCampaignId,
   getAllTokens,
   getTokensByCampaignId,
   getTokensByCampaignIdAndSoldTo,
@@ -25,6 +26,7 @@ router.post(
   "/deleteTokenByCampaignIdAndSoldTo",
   deleteTokenByCampaignIdAndSoldTo
 );
+router.post("/deleteTokenByCampaignId", deleteTokenByCampaignId);
 
 router.get("/transaction/:transactionCode", getTokensByTransactionCode);
 router.get("/soldTo/:soldTo", getTokensBySoldTo);

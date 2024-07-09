@@ -26,3 +26,6 @@ export const validatedeleteTokenByCampaignIdAndSoldTo = [
   body("quantity").isNumeric(),
   body("soldTo").isString(),
 ];
+
+// deleteTokenByCampaignId;
+export const validateDeleteTokenByCampaignId = [body("campaignId").isString()];

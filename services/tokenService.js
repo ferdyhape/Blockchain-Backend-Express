@@ -96,6 +96,29 @@ export const deleteTokenByCampaignIdAndSoldTo = async (req) => {
   }
 };
 
+// tokenDeleteByCampaignId;
+export const deleteTokenByCampaignId = async (req) => {
+  consoleForDevelop("Delete Token By Campaign ID Process [Service]");
+  const { campaignId } = req;
+  const arrayParams = [campaignId];
+  const response = await sendRawTx(
+    arrayParams,
+    "deleteTokenByCampaignId",
+    "token"
+  );
+
+  if (response.transactionHash) {
+    consoleForDevelop(
+      [
+        "Token deleted successfully",
+        "Transaction Hash: " + response.transactionHash,
+      ],
+      "footer"
+    );
+    return response.transactionHash;
+  }
+};
+
 export const getAllTokens = async () => {
   consoleForDevelop("Get All Tokens Process [Service]");
   const contract = await createContractInstance("token");
