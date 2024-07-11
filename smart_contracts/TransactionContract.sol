@@ -11,9 +11,8 @@ contract TransactionContract {
         string status;
         uint quantity;
         uint256 totalPrice;
-        string paymentMethodDetailId;
-        string paymentProof; // Added paymentProof attribute
-        uint createdAt;
+        string paymentProof;
+        string createdAt; // Change to string
     }
 
     mapping(string => Transaction) public transactions; // Deklarasi mapping
@@ -28,9 +27,8 @@ contract TransactionContract {
         string status,
         uint quantity,
         uint256 totalPrice,
-        string paymentMethodDetailId,
         string paymentProof, // Added paymentProof attribute to event
-        uint createdAt
+        string createdAt // Change to string
     );
 
     event StatusUpdated(string transactionCode, string newStatus);
@@ -50,8 +48,7 @@ contract TransactionContract {
         string memory _status,
         uint _quantity,
         uint256 _totalPrice,
-        string memory _paymentMethodDetailId,
-        uint _createdAt
+        string memory _createdAt // Change to string
     ) public {
         transactions[_transactionCode] = Transaction(
             _transactionCode,
@@ -62,9 +59,8 @@ contract TransactionContract {
             _status,
             _quantity,
             _totalPrice,
-            _paymentMethodDetailId,
             "null",
-            _createdAt
+            _createdAt // Change to string
         );
 
         transactionCodes.push(_transactionCode); // Tambahkan kode transaksi ke dalam array
@@ -78,9 +74,8 @@ contract TransactionContract {
             _status,
             _quantity,
             _totalPrice,
-            _paymentMethodDetailId,
             "null",
-            _createdAt
+            _createdAt // Change to string
         );
     }
 

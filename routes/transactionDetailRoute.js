@@ -6,11 +6,11 @@ import {
   getCountTransactionDetailByTransactionCode,
   getTransactionDetailByTransactionCode,
 } from "../controllers/transactionDetailController.js";
-import validateTokenMiddleware from "../middleware/validateToken.js";
+import { validateTokenGeneral } from "../middleware/validateToken.js";
 
 const router = express.Router();
 
-router.use(validateTokenMiddleware);
+router.use(validateTokenGeneral);
 
 // router.get("/", getTransactionDetails);
 router.post("/", addTransactionDetail);

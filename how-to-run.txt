@@ -1,0 +1,4 @@
+1. redis-cli FLUSHALL
+2. npm run dev
+3. go to ./request.rest, start deploy transaction contract and transaction detail contract
+4. foreach response, copy the contract address and paste it to .env file
