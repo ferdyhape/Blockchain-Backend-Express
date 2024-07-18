@@ -21,6 +21,96 @@ import { consoleForDevelop } from "../config/app.js";
 
 const web3 = new Web3(API_URL);
 
+const mapBlocks = (block, nextBlock) => {
+  return {
+    number: block.number.toString(),
+    hash: block.hash,
+    parentHash: block.parentHash,
+    prevHash: block.parentHash,
+    // nextHash: nextBlock ? nextBlock.hash : null,
+    nonce: block.nonce.toString(),
+    sha3Uncles: block.sha3Uncles,
+    logsBloom: block.logsBloom,
+    transactionsRoot: block.transactionsRoot,
+    stateRoot: block.stateRoot,
+    receiptsRoot: block.receiptsRoot,
+    miner: block.miner,
+    difficulty: block.difficulty.toString(),
+    totalDifficulty: block.totalDifficulty.toString(),
+    extraData: block.extraData,
+    size: block.size.toString(),
+    gasLimit: block.gasLimit.toString(),
+    gasUsed: block.gasUsed.toString(),
+    timestamp: block.timestamp.toString(),
+    transactions: block.transactions,
+    uncles: block.uncles,
+  };
+};
+
+const mapTransaction = (transaction) => {
+  return {
+    blockHash: transaction.blockHash,
+    blockNumber: transaction.blockNumber.toString(),
+    from: transaction.from,
+    gas: transaction.gas.toString(),
+    gasPrice: transaction.gasPrice.toString(),
+    hash: transaction.hash,
+    nonce: transaction.nonce.toString(),
+    to: transaction.to,
+    transactionIndex: transaction.transactionIndex.toString(),
+    value: transaction.value.toString(),
+    type: transaction.type.toString(),
+    chainId: transaction.chainId.toString(),
+    v: transaction.v.toString(),
+    r: transaction.r,
+    s: transaction.s,
+    inputData: transaction.input,
+    inputDataConvertionFromHexToAscii: web3.utils.hexToAscii(transaction.input),
+  };
+};
+
+export const getAllBlocks = async () => {
+  const latestBlockNumber = await web3.eth.getBlockNumber();
+  const blocks = [];
+
+  for (let blockNumber = 0; blockNumber <= latestBlockNumber; blockNumber++) {
+    const block = await web3.eth.getBlock(blockNumber);
+    const blockInfo = {
+      blockNumber: block.number.toString(),
+      blockHash: block.hash,
+      parentHash: block.parentHash,
+    };
+
+    const nextBlock = await web3.eth.getBlock(blockNumber + 1);
+    if (nextBlock) {
+      blockInfo.nextHash = nextBlock.hash;
+    } else {
+      blockInfo.nextHash = "Block belum ada";
+    }
+
+    blocks.push(blockInfo);
+  }
+
+  console.log("blocks", blocks);
+  return blocks;
+};
+
+export const getBlockByNumber = async (blockNumber) => {
+  const block = await web3.eth.getBlock(blockNumber);
+  return mapBlocks(block);
+};
+
+export const getBlockFromTransactionHash = async (transactionHash) => {
+  const transaction = await web3.eth.getTransaction(transactionHash);
+  const block = await web3.eth.getBlock(transaction.blockNumber);
+  return [
+    mapTransaction(transaction),
+    mapBlocks(block),
+    // "transaction" + mapTransaction(transaction),
+    // "block" + mapBlocks(block),
+  ];
+};
+
 // code for deploy
 const __dirname = path.resolve();
 const buildPath = path.resolve(__dirname, "smart_contracts", "build");

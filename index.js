@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/transactions", TransactionRoute);
 app.use("/api/transaction-details", TransactionDetailRoute);
 app.use("/api/tokens", TokenRoute);
-// app.use("/web3", Web3Route);
+app.use("/api/web3", Web3Route);
 
 // route for testing
 app.get("/", (req, res) => {

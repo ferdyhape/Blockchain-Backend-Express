@@ -1,5 +1,42 @@
-import { deploySmartContract as deploySmartContractService } from "../services/web3Service.js";
+import {
+  getAllBlocks as getAllBlocksService,
+  deploySmartContract as deploySmartContractService,
+  getBlockByNumber as getBlockByNumberService,
+  getBlockFromTransactionHash as getBlockFromTransactionHashService,
+} from "../services/web3Service.js";
 import { consoleForDevelop } from "../config/app.js";
+
+export const getBlockFromTransactionHash = async (req, res) => {
+  const { transactionHash } = req.params;
+  try {
+    const block = await getBlockFromTransactionHashService(transactionHash);
+    return res.status(200).json({ data: block });
+  } catch (error) {
+    console.error("Error getting block from transaction hash:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getBlockByNumber = async (req, res) => {
+  const { blockNumber } = req.params;
+  try {
+    const block = await getBlockByNumberService(blockNumber);
+    return res.status(200).json({ data: block });
+  } catch (error) {
+    console.error("Error getting block by number:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getAllBlocks = async (req, res) => {
+  try {
+    const blocks = await getAllBlocksService();
+    return res.status(200).json({ data: blocks });
+  } catch (error) {
+    console.error("Error getting all blocks:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 const deploySmartContract = async (contractName) => {
   // consoleForDevelop(
