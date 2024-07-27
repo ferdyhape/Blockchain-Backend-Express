@@ -335,7 +335,7 @@ export const sendRawTx = async (arrayParams, method, useFor) => {
     );
     return sentTx;
   } catch (error) {
-    console.error("Error sending raw transaction:", error);
+    // console.error("Error sending raw transaction:", error);
     throw error;
   }
 };
