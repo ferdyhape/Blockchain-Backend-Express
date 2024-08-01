@@ -103,6 +103,7 @@ export const getBlockByNumber = async (blockNumber) => {
 export const getBlockFromTransactionHash = async (transactionHash) => {
   const transaction = await web3.eth.getTransaction(transactionHash);
   const block = await web3.eth.getBlock(transaction.blockNumber);
+  console.log("transaction", transaction);
   return [
     mapTransaction(transaction),
     mapBlocks(block),
